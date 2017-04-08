@@ -21,9 +21,9 @@ MAIL_SERVER = 'smtp.googlemail.com'
 MAIL_PORT = 465
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
-MAIL_USERNAME = 'flask.boilerplate'
-MAIL_PASSWORD = 'flaskboilerplate123'
-ADMINS = ['flask.boilerplate@gmail.com']
+MAIL_USERNAME = 'NetSecShare'
+MAIL_PASSWORD = 'NetSecShare123'
+ADMINS = ['kylebowman99@gmail.com']
 
 # Number of times a password is hashed
 BCRYPT_LOG_ROUNDS = 12
