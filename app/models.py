@@ -1,5 +1,6 @@
 from sqlalchemy.ext.hybrid import hybrid_property
 from flask.ext.login import UserMixin
+import json
 
 from app import db, bcrypt
 
@@ -12,10 +13,11 @@ class User(db.Model, UserMixin):
 
     first_name = db.Column(db.String)
     last_name = db.Column(db.String)
-    phone = db.Column(db.String)
+#    phone = db.Column(db.String)
     email = db.Column(db.String, primary_key=True)
     confirmation = db.Column(db.Boolean)
     _password = db.Column(db.String)
+    permitted_files = db.Column(db.VARCHAR)
 
     @property
     def full_name(self):
@@ -34,4 +36,7 @@ class User(db.Model, UserMixin):
 
     def get_id(self):
         return self.email
+
+    def get_permissions(self, value):
+        return self.permitted_files
 

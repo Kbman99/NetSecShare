@@ -5,12 +5,17 @@ from itsdangerous import URLSafeTimedSerializer
 from app import app, models, db
 from app.forms import user as user_forms
 from app.toolbox import email
+from ldap3 import Server, Connection, ALL
+import random
 
 # Serializer for generating random tokens
 ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 # Create a user blueprint
 userbp = Blueprint('userbp', __name__, url_prefix='/user')
+
+# Define ldap server to connect with
+s = Server(app.config['LDAP_SERVER'], use_ssl=True, get_info=ALL)
 
 
 @userbp.route('/signup', methods=['GET', 'POST'])
@@ -21,13 +26,35 @@ def signup():
         user = models.User(
             first_name=form.first_name.data,
             last_name=form.last_name.data,
-            phone=form.phone.data,
+#            phone=form.phone.data,
             email=form.email.data,
             confirmation=False,
             password=form.password.data,
         )
+
+        # Create a ldap_user 
+        ldap_user = {
+        'objectClass': ['inetOrgPerson', 'posixAccount', 'top'], 
+        'givenName': user.first_name, 
+        'sn': user.last_name, 
+        'gidNumber': 500, 
+        'uidNumber': random.random(1000,1000000), 
+        'uid': user.email.split('@',1), 
+        'homeDirectory': '/home/users/' + user.email.split('@',1)
+        }
+
+        user_ldap_dn = 'cn=' + ldap_user['uid'] + ',ou=Users,dc=ldap,dc=com'
         # Insert the user in the database
         db.session.add(user)
+        # Add user in LDAP
+        try:
+            c = Connection(s, user=app.config['LDAP_SERVICE_USERNAME'], password=app.config['LDAP_SERVICE_PASSWORD'])
+            c.bind()
+            c.add(user_ldap_dn, attributes=ldap_user)
+        except Exception:
+            flash('There was an error in creating your account, if the issue persists, please contact and administrator.', 'negative')
+            return redirect(url_for('index'))
+        # If there was no error in adding user via LDAP we will commit the session to the database
         db.session.commit()
         # Subject of the confirmation email
         subject = 'Please confirm your email address.'
@@ -60,8 +87,7 @@ def confirm(token):
     # Update the database with the user
     db.session.commit()
     # Send to the signin page
-    flash(
-        'Your email address has been confirmed, you can sign in.', 'positive')
+    flash('Your email address has been confirmed, you can sign in.', 'positive')
     return redirect(url_for('userbp.signin'))
 
 
@@ -72,13 +98,20 @@ def signin():
         user = models.User.query.filter_by(email=form.email.data).first()
         # Check the user exists
         if user is not None:
+            # Setup a connection between the client and LDAP server
+            user_ldap_dn = 'cn=' + form.email.data.split('@', 1) + ',ou=Users,dc=ldap,dc=com'
+            c = Connection(s, user=user_ldap_dn, password=form.password.data)
             # Check the password is correct
-            if user.check_password(form.password.data):
+            if user.check_password(form.password.data) and c.bind():
+                # unbind user from LDAP server
+                c.unbind()
                 login_user(user)
                 # Send back to the home page
                 flash('Succesfully signed in.', 'positive')
                 return redirect(url_for('index'))
             else:
+                # unbind user from LDAP server
+                c.unbind()
                 flash('The password you have entered is wrong.', 'negative')
                 return redirect(url_for('userbp.signin'))
         else:
