@@ -4,9 +4,9 @@ TIMEZONE = 'Europe/Paris'
 SECRET_KEY = 'houdini'
 
 # LDAP server details
-LDAP_SERVER =''
-LDAP_SERVICE_USERNAME = ''
-LDAP_SERVICE_PASSWORD = ''
+LDAP_SERVER ='tom-europa.homelinux.com'
+LDAP_SERVICE_USERNAME = 'cn=admin,dc=ldap,dc=com'
+LDAP_SERVICE_PASSWORD = '56nT@Ly2t'
 
 # Admin credentials
 ADMIN_CREDENTIALS = ('admin', 'pa$$word')
@@ -26,3 +26,6 @@ ADMINS = ['kylebowman99@gmail.com']
 
 # Number of times a password is hashed
 BCRYPT_LOG_ROUNDS = 12
+
+# Permission table
+Permission = {1: 'Read',}

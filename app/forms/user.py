@@ -35,6 +35,14 @@ class Forgot(Form):
                       description='Email address')
 
 
+class Resend(Form):
+
+    ''' User forgot password form. '''
+
+    email = TextField(validators=[Required(), Email()],
+                      description='Email address')
+
+
 class Reset(Form):
 
     ''' User reset password form. '''
