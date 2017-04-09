@@ -4,9 +4,9 @@ TIMEZONE = 'Europe/Paris'
 SECRET_KEY = 'houdini'
 
 # LDAP server details
-LDAP_SERVER ='tom-europa.homelinux.com'
-LDAP_SERVICE_USERNAME = 'cn=admin,dc=ldap,dc=com'
-LDAP_SERVICE_PASSWORD = '56nT@Ly2t'
+LDAP_SERVER =''
+LDAP_SERVICE_USERNAME = ''
+LDAP_SERVICE_PASSWORD = ''
 
 # Admin credentials
 ADMIN_CREDENTIALS = ('admin', 'pa$$word')
