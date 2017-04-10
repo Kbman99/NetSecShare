@@ -5,7 +5,7 @@ from itsdangerous import URLSafeTimedSerializer
 from app import app, models, db, bcrypt
 from app.forms import user as user_forms
 from app.toolbox import email
-from ldap3 import Server, Connection, ALL, MODIFY_REPLACE, HASHED_SALTED_SHA256, extend
+from ldap3 import Server, Connection, ALL, MODIFY_REPLACE
 import hashlib
 import random
 
@@ -27,23 +27,23 @@ def signup():
         user = models.User(
             first_name=form.first_name.data,
             last_name=form.last_name.data,
-#            phone=form.phone.data,
+            #            phone=form.phone.data,
             email=form.email.data,
             confirmation=False,
-            password=form.password.data,
+            password=form.password.data
         )
 
         # Create a ldap_user 
         ldap_user = {
-        'objectClass': ['inetOrgPerson', 'posixAccount', 'top'], 
-        'givenName': user.first_name, 
-        'sn': user.last_name, 
-        'gidNumber': 500, 
-        'uidNumber': random.randint(1000,1000000), 
-        'uid': user.email.split('@',1)[0], 
-        'homeDirectory': '/home/users/' + user.email.split('@',1)[0],
-        'userPassword': form.password.data
-        }
+                    'objectClass': ['inetOrgPerson', 'posixAccount', 'top'],
+                    'givenName': user.first_name,
+                    'sn': user.last_name,
+                    'gidNumber': 500,
+                    'uidNumber': random.randint(1000,1000000),
+                    'uid': user.email.split('@',1)[0],
+                    'homeDirectory': '/home/users/' + user.email.split('@',1)[0],
+                    'userPassword': form.password.data
+                    }
 
         user_ldap_dn = 'cn=' + ldap_user['uid'] + ',ou=Users,dc=ldap,dc=com'
         # Insert the user in the database
@@ -52,13 +52,15 @@ def signup():
         try:
             c = Connection(s, user=app.config['LDAP_SERVICE_USERNAME'], password=app.config['LDAP_SERVICE_PASSWORD'])
             c.bind()
+            c.start_tls()
             c.add(user_ldap_dn, attributes=ldap_user)
         except Exception as e:
             # remove the user from the session
             print(e)
             db.session.rollback()
             db.session.commit()
-            flash('There was an error in creating your account, if the issue persists, please contact and administrator.', 'negative')
+            flash('There was an error in creating your account, if the issue persists, '
+                  'please contact and administrator.', 'negative')
             return redirect(url_for('index'))
         # If there was no error in adding user via LDAP we will commit the session to the database
         c.unbind()
@@ -109,9 +111,13 @@ def signin():
             user_ldap_dn = 'cn=' + user.email.split('@', 1)[0] + ',ou=Users,dc=ldap,dc=com'
             print(user_ldap_dn)
             c = Connection(s, user=user_ldap_dn, password=form.password.data)
+            # Initialize connection to LDAP server
+            c.open()
+            # Start TLS to encrypt credentials
+            c.start_tls()
             # Check the password is correct
             if user.check_password(form.password.data) and c.bind():
-                # unbind user from LDAP server
+                # unbind user from LDAP server and log them in
                 c.unbind()
                 login_user(user)
                 # Send back to the home page
@@ -144,13 +150,13 @@ def resend():
             # Send the email to user
             email.send(user.email, subject, html)
             # Send back to the home page
-            flash('Your confirmation email has been successfully resent. Check your emails to confirm your email address.', 'positive')
+            flash('Your confirmation email has been successfully resent. '
+                  'Check your emails to confirm your email address.', 'positive')
             return redirect(url_for('index'))
         else:
             flash('Unknown email address.', 'negative')
             return redirect(url_for('index'))
     return render_template('user/resend.html', form=form)
-
 
 
 @userbp.route('/signout')
@@ -206,16 +212,21 @@ def reset(token):
         if user is not None:
             # Connect to the LDAP server with the 
             c = Connection(s, user=app.config['LDAP_SERVICE_USERNAME'], password=app.config['LDAP_SERVICE_PASSWORD'])
+            # Open up the connection between the client and server
+            c.open()
+            # Raise the security level and start TLS
+            c.start_tls()
+            # Bind the user to the server now that the connection is secure
             c.bind()
+
             user_ldap_dn = 'cn=' + user.email.split('@', 1)[0] + ',ou=Users,dc=ldap,dc=com'
+
             # Modify the user password and the LDAP user password
             user.password = form.password.data
-            print("password")
-            print(user.password)
             c.modify(user_ldap_dn,
-                {
-                'userPassword': [(MODIFY_REPLACE, [form.password.data])]
-                })
+                     {
+                        'userPassword': [(MODIFY_REPLACE, [form.password.data])]
+                     })
             # Modify the LDAP user profile with the new password
             c.unbind()
             # Update the database with the user
