@@ -5,7 +5,11 @@ from itsdangerous import URLSafeTimedSerializer
 from app import app, models, db, bcrypt
 from app.forms import user as user_forms
 from app.toolbox import email
+<<<<<<< HEAD
 from ldap3 import Server, Connection, ALL, MODIFY_REPLACE
+=======
+from ldap3 import Server, Connection, ALL, MODIFY_REPLACE, HASHED_SALTED_SHA256, extend
+>>>>>>> 43109e4a7aace52435876cc54e44e408c46537d1
 import hashlib
 import random
 
@@ -27,7 +31,11 @@ def signup():
         user = models.User(
             first_name=form.first_name.data,
             last_name=form.last_name.data,
+<<<<<<< HEAD
             #            phone=form.phone.data,
+=======
+#            phone=form.phone.data,
+>>>>>>> 43109e4a7aace52435876cc54e44e408c46537d1
             email=form.email.data,
             confirmation=False,
             password=form.password.data
@@ -51,8 +59,9 @@ def signup():
         # Add user in LDAP
         try:
             c = Connection(s, user=app.config['LDAP_SERVICE_USERNAME'], password=app.config['LDAP_SERVICE_PASSWORD'])
-            c.bind()
+            c.open()
             c.start_tls()
+            c.bind()
             c.add(user_ldap_dn, attributes=ldap_user)
         except Exception as e:
             # remove the user from the session
@@ -61,6 +70,7 @@ def signup():
             db.session.commit()
             flash('There was an error in creating your account, if the issue persists, '
                   'please contact and administrator.', 'negative')
+            flash('There was an error in creating your account, if the issue persists, please contact and administrator.', 'negative')
             return redirect(url_for('index'))
         # If there was no error in adding user via LDAP we will commit the session to the database
         c.unbind()
