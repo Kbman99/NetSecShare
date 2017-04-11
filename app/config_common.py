@@ -30,3 +30,6 @@ BCRYPT_LOG_ROUNDS = 12
 
 # Permission table
 Permission = {1: 'Read',}
+
+# Flask-Uploads config options
+UPLOADS_DEFAULT_DEST = 'app/static'

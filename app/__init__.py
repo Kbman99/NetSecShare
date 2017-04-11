@@ -45,3 +45,4 @@ def load_user(email):
     return User.query.filter(User.email == email).first()
 
 from app import admin
+

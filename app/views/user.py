@@ -40,9 +40,9 @@ def signup():
                     'givenName': user.first_name,
                     'sn': user.last_name,
                     'gidNumber': 500,
-                    'uidNumber': random.randint(1000,1000000),
-                    'uid': user.email.split('@',1)[0],
-                    'homeDirectory': '/home/users/' + user.email.split('@',1)[0],
+                    'uidNumber': random.randint(1000, 1000000),
+                    'uid': user.email.split('@', 1)[0],
+                    'homeDirectory': '/home/users/' + user.email.split('@', 1)[0],
                     'userPassword': form.password.data
                     }
 
@@ -252,3 +252,8 @@ def reset(token):
             flash('Unknown email address.', 'negative')
             return redirect(url_for('userbp.forgot'))
     return render_template('user/reset.html', form=form, token=token)
+
+
+@app.route('/files')
+def files():
+    return render_template('user/files.html')

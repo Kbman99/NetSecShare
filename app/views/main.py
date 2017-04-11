@@ -1,6 +1,22 @@
-from flask import render_template, jsonify
-from app import app
+from flask import render_template, jsonify, request
+from flask.ext.uploads import DEFAULTS, UploadSet, configure_uploads
+from app import app, thumbnail
 import random
+import uuid
+
+uploads = UploadSet('uploads', DEFAULTS)
+
+configure_uploads(app, uploads)
+
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST' and 'file' in request.files:
+        unique_filename = uuid.uuid4().hex
+        filename = uploads.save(request.files['file'], name=unique_filename + '.')
+        thumbnail.generate_thumbnail(unique_filename, 'app/static/')
+        return filename
+    return render_template('upload.html')
 
 
 @app.route('/')
