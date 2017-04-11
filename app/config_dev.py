@@ -30,3 +30,6 @@ BCRYPT_LOG_ROUNDS = 12
 
 LOG_LEVEL = logging.DEBUG
 LOG_FILENAME = 'activity.log'
+LOG_FILE = 'activity.log'
+LOG_MAXBYTES = 10485760
+LOG_BACKUPS = 5

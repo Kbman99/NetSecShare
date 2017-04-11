@@ -1,4 +1,5 @@
-TIMEZONE = 'Europe/Paris'
+TIMEZONE = 'US/Eastern'
+TIME_FMT = '%Y-%m-%d %H:%M:%S %Z%z'
 
 # Secret key for generating tokens
 SECRET_KEY = 'houdini'

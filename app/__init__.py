@@ -1,4 +1,5 @@
 from flask import Flask
+import sys
 
 app = Flask(__name__)
 
@@ -6,7 +7,7 @@ app = Flask(__name__)
 app.config.from_object('app.config')
 
 # Setup the logger
-from app.logger_setup import logger
+from app import logger_setup
 
 # Setup the database
 from flask.ext.sqlalchemy import SQLAlchemy

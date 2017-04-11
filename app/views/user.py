@@ -1,17 +1,14 @@
 from flask import (Blueprint, render_template, redirect, url_for,
-                   abort, flash)
-from flask.ext.login import login_user, logout_user, login_required
+                   abort, flash, g)
+from flask.ext.login import login_user, logout_user, login_required, current_user
 from itsdangerous import URLSafeTimedSerializer
 from app import app, models, db, bcrypt
 from app.forms import user as user_forms
+from app.logger_setup import logger
 from app.toolbox import email
-<<<<<<< HEAD
 from ldap3 import Server, Connection, ALL, MODIFY_REPLACE
-=======
-from ldap3 import Server, Connection, ALL, MODIFY_REPLACE, HASHED_SALTED_SHA256, extend
->>>>>>> 43109e4a7aace52435876cc54e44e408c46537d1
-import hashlib
 import random
+import sys
 
 # Serializer for generating random tokens
 ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
@@ -20,7 +17,7 @@ ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 userbp = Blueprint('userbp', __name__, url_prefix='/user')
 
 # Define ldap server to connect with
-s = Server(app.config['LDAP_SERVER'], get_info = ALL)
+s = Server(app.config['LDAP_SERVER'], get_info=ALL)
 
 
 @userbp.route('/signup', methods=['GET', 'POST'])
@@ -31,11 +28,7 @@ def signup():
         user = models.User(
             first_name=form.first_name.data,
             last_name=form.last_name.data,
-<<<<<<< HEAD
-            #            phone=form.phone.data,
-=======
 #            phone=form.phone.data,
->>>>>>> 43109e4a7aace52435876cc54e44e408c46537d1
             email=form.email.data,
             confirmation=False,
             password=form.password.data
@@ -64,14 +57,15 @@ def signup():
             c.bind()
             c.add(user_ldap_dn, attributes=ldap_user)
         except Exception as e:
-            # remove the user from the session
+            # remove the user from the db session
             print(e)
             db.session.rollback()
             db.session.commit()
+            logger.error('User account creation failed', user=user.get_id())
             flash('There was an error in creating your account, if the issue persists, '
                   'please contact and administrator.', 'negative')
-            flash('There was an error in creating your account, if the issue persists, please contact and administrator.', 'negative')
             return redirect(url_for('index'))
+        logger.info('User account created successfully', user=user.get_id())
         # If there was no error in adding user via LDAP we will commit the session to the database
         c.unbind()
         db.session.commit()
@@ -121,19 +115,26 @@ def signin():
             user_ldap_dn = 'cn=' + user.email.split('@', 1)[0] + ',ou=Users,dc=ldap,dc=com'
             print(user_ldap_dn)
             c = Connection(s, user=user_ldap_dn, password=form.password.data)
+            print(c)
             # Initialize connection to LDAP server
             c.open()
+            print(c)
             # Start TLS to encrypt credentials
             c.start_tls()
+            print(c)
             # Check the password is correct
             if user.check_password(form.password.data) and c.bind():
                 # unbind user from LDAP server and log them in
+                print(c)
                 c.unbind()
                 login_user(user)
+                logger.info('User logged in successfully', user=current_user.get_id())
                 # Send back to the home page
                 flash('Succesfully signed in.', 'positive')
                 return redirect(url_for('index'))
             else:
+                print(c)
+                logger.info('User login failed', user=user.email)
                 flash('The password you have entered is wrong.', 'negative')
                 return redirect(url_for('userbp.signin'))
         else:
@@ -171,6 +172,7 @@ def resend():
 
 @userbp.route('/signout')
 def signout():
+    logger.info('User logged out', user=current_user.get_id())
     logout_user()
     flash('Succesfully signed out.', 'positive')
     return redirect(url_for('index'))
@@ -199,6 +201,7 @@ def forgot():
             html = render_template('email/reset.html', reset_url=resetUrl)
             # Send the email to user
             email.send(user.email, subject, html)
+            logger.info('User password reset email sent', user=user.email)
             # Send back to the home page
             flash('Check your emails to reset your password.', 'positive')
             return redirect(url_for('index'))
@@ -241,6 +244,7 @@ def reset(token):
             c.unbind()
             # Update the database with the user
             db.session.commit()
+            logger.info('User password reset successfully', user=user.email)
             # Send to the signin page
             flash('Your password has been reset, you can sign in.', 'positive')
             return redirect(url_for('userbp.signin'))
