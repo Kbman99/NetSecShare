@@ -1,8 +1,10 @@
 from flask import render_template, jsonify, request
 from flask.ext.uploads import DEFAULTS, UploadSet, configure_uploads
-from app import app, thumbnail
+from app import app, thumbnail, models
+from flask.ext.login import login_required, current_user
 import random
 import uuid
+import sys, os
 
 uploads = UploadSet('uploads', DEFAULTS)
 
@@ -10,11 +12,18 @@ configure_uploads(app, uploads)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
+@login_required
 def upload():
     if request.method == 'POST' and 'file' in request.files:
         unique_filename = uuid.uuid4().hex
         filename = uploads.save(request.files['file'], name=unique_filename + '.')
         thumbnail.generate_thumbnail(unique_filename, 'app/static/')
+        file_path = os.path.join('app/static/uploads/', filename)
+        a = models.Association(permission=1)
+        a.file = models.File(file_path, 'Hello there')
+        current_user.files.append(a)
+        for assoc in current_user.files:
+            print(assoc.permission, file=sys.stderr)
         return filename
     return render_template('upload.html')
 

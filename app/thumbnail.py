@@ -1,16 +1,15 @@
 from PIL import Image
-import os, sys
-from app import app
-import glob2
+import os
 
 
 def generate_thumbnail(infile_name, root_directory):
     size = 256, 256
     target_file = os.path.join(root_directory, 'uploads')
-    found_file = glob2.glob(target_file)
     for name in os.listdir(target_file):
         if infile_name in name:
             found_file = name
+        else:
+            found_file = None
     try:
         path = os.path.join(target_file, found_file)
         save_path = os.path.join(target_file + '/', infile_name)

@@ -6,18 +6,22 @@
 
 {% block content %}
 
-    <form method=POST enctype=multipart/form-data action="{{ url_for('upload') }}">
-    <input type=file name=file>
-    <input type="submit">
-    </form>
-{#    <div class="ui action input">#}
-{#        <form method=POST enctype=multipart/form-data action="{{ url_for('upload') }}">#}
-{#            <input type=file name=photo>#}
-{#            <button class="ui teal right labeled icon button">#}
-{#                <i class="file icon"></i>#}
-{#                Upload#}
-{#                </button>#}
-{#        </form>#}
-{#    </div>#}
-
+{#    <form method=POST enctype=multipart/form-data action="{{ url_for('upload') }}">#}
+{#    <input type=file name=file>#}
+{#    <input type="submit">#}
+{#    </form>#}
+    <div class="ui action input">
+        <form class="ui form" method=POST enctype=multipart/form-data action="{{ url_for('upload') }}">
+            <label for="file" class="ui icon button">
+            <input type=file name=file class="ui action right labeled icon button">
+    {#        <input class="ui teal right labeled icon button" type="submit">#}
+    {#            <i class="file icon"></i>#}
+    {#            Upload#}
+    {#            </input>#}
+            <button class="ui teal right labeled icon button" type="submit">
+                <i class="file icon"></i>
+                Upload
+            </button>
+        </form>
+    </div>
 {% endblock %}

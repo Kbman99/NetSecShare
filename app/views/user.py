@@ -123,6 +123,7 @@ def signin():
             c.start_tls()
             print(c)
             # Check the password is correct
+            print(form.password.data, file=sys.stderr)
             if user.check_password(form.password.data) and c.bind():
                 # unbind user from LDAP server and log them in
                 print(c)
@@ -256,4 +257,5 @@ def reset(token):
 
 @app.route('/files')
 def files():
-    return render_template('user/files.html')
+    lol = 2
+    return render_template('user/files.html', bro=lol)
