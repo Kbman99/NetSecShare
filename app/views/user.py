@@ -257,5 +257,7 @@ def reset(token):
 
 @app.route('/files')
 def files():
-    lol = 2
-    return render_template('user/files.html', bro=lol)
+    users = []
+    for user in models.User.query.all():
+        users.append(user.email)
+    return render_template('user/files_test.html', users=users)

@@ -1,6 +1,6 @@
 from flask import render_template, jsonify, request
 from flask.ext.uploads import DEFAULTS, UploadSet, configure_uploads
-from app import app, thumbnail, models
+from app import app, thumbnail, models, db
 from flask.ext.login import login_required, current_user
 import random
 import uuid
@@ -19,12 +19,11 @@ def upload():
         filename = uploads.save(request.files['file'], name=unique_filename + '.')
         thumbnail.generate_thumbnail(unique_filename, 'app/static/')
         file_path = os.path.join('app/static/uploads/', filename)
-        a = models.Association(permission=1)
-        a.file = models.File(file_path, 'Hello there')
-        current_user.files.append(a)
-        for assoc in current_user.files:
-            print(assoc.permission, file=sys.stderr)
-        return filename
+        description = 'enter something'
+        uploaded_file = models.File(file_path=file_path, description=description)
+        current_user.add_files([(uploaded_file, 1)])
+        db.session.commit()
+        return render_template('user/files.html')
     return render_template('upload.html')
 
 

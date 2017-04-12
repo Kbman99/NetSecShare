@@ -45,16 +45,21 @@ class User(db.Model, UserMixin):
     def get_files(self):
         return self.files
 
+    def add_files(self, items):
+        for file, permission in items:
+            self.files.append(Association(permission=permission, file=file, user=self))
+
 
 class File(db.Model):
     ''' A file which exists '''
     __tablename__ = 'files'
 
-    id = db.Column(db.Integer, primary_key=True, unique=True)
+    id = db.Column(db.String, primary_key=True, unique=True)
     file_name = db.Column(db.String, unique=True)
     file_type = db.Column(db.String)
     file_path = db.Column(db.String)
     description = db.Column(db.String)
+    thumbnail_path = db.Column(db.String)
     thumbnail_path = db.Column(db.String)
     users = relationship("Association", back_populates="file")
 
@@ -65,7 +70,8 @@ class File(db.Model):
         self.file_path = file_path
         self.description = description
         self.thumbnail_path = os.path.splitext(file_path)[0] + '_thumbnail' + os.path.splitext(file_path)[1]
-
+        self.thumbnail_name = os.path.splitext(os.path.basename(file_path))[0] + \
+            '_thumbnail' + os.path.splitext(file_path)[1]
     # @property
     # def description(self):
     #     return self.description

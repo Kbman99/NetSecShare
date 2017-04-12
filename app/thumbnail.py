@@ -1,5 +1,5 @@
 from PIL import Image
-import os
+import os, sys
 
 
 def generate_thumbnail(infile_name, root_directory):
@@ -13,6 +13,8 @@ def generate_thumbnail(infile_name, root_directory):
     try:
         path = os.path.join(target_file, found_file)
         save_path = os.path.join(target_file + '/', infile_name)
+        print(target_file, file=sys.stderr)
+        print(infile_name, file=sys.stderr)
         outfile = Image.open(path)
         outfile.thumbnail(size)
         outfile.save(save_path + '_thumbnail.png')

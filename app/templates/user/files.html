@@ -8,18 +8,18 @@
 
     <h1 class="ui header">Your Files</h1>
     <div class ="ui link cards">
-    {%  for i in range(20) %}
+    {% for assoc in current_user.files %}
         <div class="card">
             <div class="image">
-              <img src={{ url_for('static', filename='img/error.png') }}>
+              <img src="{{ url_for('static', filename='uploads/' + os.path.basename(assoc.file.thumbnail_path)) }}">
             </div>
             <div class="content">
-              <div class="header">Matt Giampietro</div>
+              <div class="header">{{ current_user.full_name }}</div>
               <div class="meta">
                 <a>Friends</a>
               </div>
               <div class="description">
-                Matthew is an interior designer living in New York.
+                {{ assoc.file.description }}
               </div>
             </div>
             <div class="extra content">

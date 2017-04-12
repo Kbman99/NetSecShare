@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+<div id="user_search" class="ui search hidden">
+    <div class="ui icon input">
+        <input class="prompt" type="text" placeholder="Search users...">
+        <i class="search icon"></i>
+    </div>
+    <div class="results"></div>
+</div>
+{% block content %}
+
+    <div class="ui grid">
+        <h1 class="ui header six wide column">Your Files</h1>
+        <div class="ui search right six wide column">
+            <div class="ui icon input">
+                <input class="prompt" type="text" placeholder="Search users...">
+                <i class="search icon"></i>
+            </div>
+            <div class="results"></div>
+        </div>
+    </div>
+    <div class="ui link cards">
+        {% for i in range(10) %}
+            <div class="card" id="{{ i }}">
+                <div class="image">
+                    <img src="{{ url_for('static', filename='img/error.png') }}">
+                </div>
+                <div class="content">
+                    <div class="header">{{ current_user.full_name }}</div>
+                    <div class="meta">
+                        <a>Friends</a>
+                    </div>
+                    <div class="description">
+                        Hello!
+                    </div>
+                </div>
+                <div class="large ui buttons extra content">
+                    <button class="ui green button downloadButton"><i class="download icon"></i></button>
+                    <button class="ui red button deleteButton"><i class="trash icon"></i></button>
+                    <button class="ui blue button shareButton"><i class="share icon"></i>
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="ui modal small">
+        <i class="close icon"></i>
+        <div class="header">
+            Share a File
+        </div>
+        <div class="content">
+            <div class="description">
+                <div class="ui header">Choose who you want to share this file with!</div>
+                <div id="user_search" class="ui search hidden">
+                    <form class="ui form">
+                        <div class="ui icon input">
+                            <input id="fileID" name="" class="prompt" type="text" placeholder="Search users...">
+                            <i class="search icon"></i>
+                        </div>
+                        </form>
+                        <div class="results"></div>
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui black deny button">
+                I don't wanna
+            </div>
+            <div class="ui blue right labeled icon button" action="">
+                Share it!
+                <i class="share icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <script type=text/javascript>
+        $(document).ready(function () {
+            var content = [];
+            var tmp = {};
+            {% for user in users %}
+                tmp = {title: "{{ user }}"};
+                content.push(tmp);
+            {%  endfor %}
+            $('.ui.search')
+                .search({
+                    source: content
+                });
+            $('.shareButton').click(function () {
+                $('.ui.modal').modal('show')
+                var fileID = $(this).closest('.card').prop('id');
+                $('#fileID').attr('name', fileID);
+            })
+        })
+    </script>
+
+{% endblock %}

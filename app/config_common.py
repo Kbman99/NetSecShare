@@ -5,15 +5,15 @@ TIME_FMT = '%Y-%m-%d %H:%M:%S %Z%z'
 SECRET_KEY = 'houdini'
 
 # LDAP server details
-LDAP_SERVER ='tom-europa.homelinux.com'
-LDAP_SERVICE_USERNAME = 'cn=admin,dc=ldap,dc=com'
-LDAP_SERVICE_PASSWORD = '56nT@Ly2t'
+LDAP_SERVER =''
+LDAP_SERVICE_USERNAME = ''
+LDAP_SERVICE_PASSWORD = ''
 
 # Admin credentials
 ADMIN_CREDENTIALS = ('admin', 'pa$$word')
 
 # Database choice
-SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///app_new.db'
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 # Configuration of a Gmail account for sending mails
