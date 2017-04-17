@@ -60,25 +60,25 @@ class File(db.Model):
     file_path = db.Column(db.String)
     description = db.Column(db.String)
     thumbnail_path = db.Column(db.String)
-    thumbnail_path = db.Column(db.String)
     users = relationship("Association", back_populates="file")
 
-    def __init__(self, file_path, description):
+    def __init__(self, file_path, description, original_name):
         self.id = os.path.splitext(os.path.basename(file_path))[0]
+        self.original_name = original_name
         self.file_type = os.path.splitext(os.path.basename(file_path))[1]
         self.file_name = os.path.basename(file_path)
         self.file_path = file_path
         self.description = description
-        self.thumbnail_path = os.path.splitext(file_path)[0] + '_thumbnail' + os.path.splitext(file_path)[1]
+        self.thumbnail_path = os.path.splitext(file_path)[0] + '_thumbnail.png'
         self.thumbnail_name = os.path.splitext(os.path.basename(file_path))[0] + \
-            '_thumbnail' + os.path.splitext(file_path)[1]
-    # @property
-    # def description(self):
-    #     return self.description
+            '_thumbnail.png'
 
     @property
     def file(self):
         return self.file_name
+
+    def share_file(self, user):
+        self.users.append(Association(permission=0, file=self, user=user))
 
 
 class Association(db.Model):
@@ -90,7 +90,3 @@ class Association(db.Model):
     permission = db.Column(db.Integer)
     file = relationship("File", back_populates="users")
     user = relationship("User", back_populates="files")
-
-    # def __init__(self, permission=None):
-    #     self.permission = permission
-

@@ -1,14 +1,14 @@
 from flask import (Blueprint, render_template, redirect, url_for,
-                   abort, flash, g)
+                   abort, flash, send_from_directory, jsonify, request)
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from itsdangerous import URLSafeTimedSerializer
-from app import app, models, db, bcrypt
+from app import app, models, db
 from app.forms import user as user_forms
 from app.logger_setup import logger
 from app.toolbox import email
 from ldap3 import Server, Connection, ALL, MODIFY_REPLACE
+import os
 import random
-import sys
 
 # Serializer for generating random tokens
 ts = URLSafeTimedSerializer(app.config['SECRET_KEY'])
@@ -104,6 +104,46 @@ def confirm(token):
     return redirect(url_for('userbp.signin'))
 
 
+# @userbp.route('/signin', methods=['GET', 'POST'])
+# def signin():
+#     form = user_forms.Login()
+#     if form.validate_on_submit():
+#         user = models.User.query.filter_by(email=form.email.data).first()
+#         # Check the user exists
+#         if user is not None:
+#             # Setup a connection between the client and LDAP server
+#             user_ldap_dn = 'cn=' + user.email.split('@', 1)[0] + ',ou=Users,dc=ldap,dc=com'
+#             print(user_ldap_dn)
+#             c = Connection(s, user=user_ldap_dn, password=form.password.data)
+#             print(c)
+#             # Initialize connection to LDAP server
+#             c.open()
+#             print(c)
+#             # Start TLS to encrypt credentials
+#             c.start_tls()
+#             print(c)
+#             # Check the password is correct
+#             print(form.password.data, file=sys.stderr)
+#             if user.check_password(form.password.data) and c.bind():
+#                 # unbind user from LDAP server and log them in
+#                 print(c)
+#                 c.unbind()
+#                 login_user(user)
+#                 logger.info('User logged in successfully', user=current_user.get_id())
+#                 # Send back to the home page
+#                 flash('Succesfully signed in.', 'positive')
+#                 return redirect(url_for('index'))
+#             else:
+#                 print(c)
+#                 logger.info('User login failed', user=user.email)
+#                 flash('The password you have entered is wrong.', 'negative')
+#                 return redirect(url_for('userbp.signin'))
+#         else:
+#             flash('Unknown email address.', 'negative')
+#             return redirect(url_for('userbp.signin'))
+#     return render_template('user/signin.html', form=form, title='Sign in')
+
+
 @userbp.route('/signin', methods=['GET', 'POST'])
 def signin():
     form = user_forms.Login()
@@ -113,20 +153,14 @@ def signin():
         if user is not None:
             # Setup a connection between the client and LDAP server
             user_ldap_dn = 'cn=' + user.email.split('@', 1)[0] + ',ou=Users,dc=ldap,dc=com'
-            print(user_ldap_dn)
             c = Connection(s, user=user_ldap_dn, password=form.password.data)
-            print(c)
             # Initialize connection to LDAP server
             c.open()
-            print(c)
             # Start TLS to encrypt credentials
             c.start_tls()
-            print(c)
             # Check the password is correct
-            print(form.password.data, file=sys.stderr)
             if user.check_password(form.password.data) and c.bind():
                 # unbind user from LDAP server and log them in
-                print(c)
                 c.unbind()
                 login_user(user)
                 logger.info('User logged in successfully', user=current_user.get_id())
@@ -256,8 +290,61 @@ def reset(token):
 
 
 @app.route('/files')
+@login_required
 def files():
     users = []
+    # Store all users in a list to pass to the javascript
     for user in models.User.query.all():
         users.append(user.email)
-    return render_template('user/files_test.html', users=users)
+    # We don't want a user sharing a file with himself
+    users.remove(current_user.email)
+    return render_template('user/files.html', users=users, title='Files')
+
+
+@app.route('/download_file/<path:filename>', methods=['GET', 'POST'])
+@login_required
+def download(filename):
+    uploads = os.path.join(app.root_path, app.config['UPLOADS_DIR'])
+    return send_from_directory(directory=uploads, filename=filename, as_attachment=True)
+
+
+@app.route('/files/share', methods=['POST'])
+@login_required
+def share():
+    data = request.get_json()
+    user_email = data["email"]
+    file_id = data["file"]
+    target_user = models.User.query.filter_by(email=user_email).first()
+    if target_user:
+        try:
+            target_file = models.File.filter_by(id=file_id).first()
+            target_file.share_file(target_user)
+            db.session.commit()
+            flash("You successfully shared your file with {}".format(user_email), "positive")
+            logger.info("File shared by {} to {}".format(current_user, target_user), user=current_user)
+            return jsonify(dict(success=True, message='File shared!'))
+        except Exception as e:
+            flash("Error encountered while sharing file, contact an admin or try again", "negative")
+            logger.error("Exception encountered {}".format(e), user=current_user)
+            pass
+    if e:
+        response = {"status": 200, "error": e}
+    else:
+        response = {"status": 200}
+    return jsonify(result=response)
+
+
+@app.route('/files/delete', methods=['POST'])
+@login_required
+def delete_file():
+    data = request.get_json()
+    file_id = data["file"]
+    target_file = models.File.query.filter_by(id=file_id).first()
+    for item in current_user.files:
+        if item.file is target_file:
+            db.session.delete(item)
+            db.session.commit()
+            logger.info("User {} no longer can access file {}".format(current_user, file_id))
+            return jsonify(dict(success=True, message="File deleted"))
+    return jsonify(dict(success=False, message="Unable to delete file"))
+

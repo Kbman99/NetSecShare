@@ -5,11 +5,54 @@
 {% endblock %}
 
 {% block content %}
-
-	<h1 class="ui header">{{ title }}</h1>
-
-	{% if current_user.is_authenticated %}
-	  	<h2 class="ui header">Hi {{ current_user.name }}!</h2>
-	{% endif %}
+    <div class="one column row">
+        <h1 class="ui header center aligned">{{ title }}</h1>
+    </div>
+    <div class="ui section divider"></div>
+    <div class="ui three column row">
+        <div class="one column middle aligned">
+            <div class="ui fluid card">
+                <div class="image">
+                    <img src="{{ url_for('static', filename='private/KyleB3.jpg') }}">
+                </div>
+                <div class="content">
+                    <a class="header center aligned">Kyle Bowman</a>
+                </div>
+            </div>
+            <div class="item">
+                <a href="https://github.com/kmaglietta">
+                    <i class="big green github icon"></i>
+                </a>
+            </div>
+        </div>
+        <div class="one column middle aligned">
+            <div class="ui fluid card">
+                <div class="image">
+                    <img src="{{ url_for('static', filename='private/kyle3.jpg') }}">
+                </div>
+                <div class="content">
+                    <a class="header center aligned">Kyle Maglietta</a>
+                </div>
+            </div>
+            <div class="item">
+                <a href="https://github.com/kmaglietta">
+                    <i class="big green github icon"></i>
+                </a>
+            </div>
+        </div>
+        <div class="one column middle aligned">
+            <div class="ui fluid card">
+                <div class="image">
+                    <img src="{{ url_for('static', filename='private/ryan3.jpg') }}">
+                </div>
+                <div class="content">
+                    <a class="header center aligned">Ryan Kerce</a>
+                </div>
+            </div>
+            <a href="https://github.com/rmkerce" class="center aligned">
+                <i class="big green github icon"></i>
+            </a>
+        </div>
+    </div>
 
 {% endblock %}

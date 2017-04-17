@@ -1,78 +1,135 @@
 <!DOCTYPE html>
 {% import "macros.html" as m %}
 <html lang="en">
-	<body id="container">
-   		<div id="header">
-   			{% block head %}
-				<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
-				<meta charset="UTF-8">
-				<link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-				<!-- jQuery -->
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-				<!-- Semantic Main CSS -->
-				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css"/>
-				<!-- Semantic Reset CSS -->
-				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/components/reset.min.css"/>
-				<!-- Semantic Menu CSS -->
-				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/components/menu.min.css"/>
-				<!-- Main Semantic JS  -->
-			    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
-				<!-- Custom CSS -->
-				<link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
-				<!-- Browser tab name -->
-				<title>{{ title }}</title>
-				<!-- Navbar -->
-				<div class="ui attached inverted menu">
-				  	{{ m.nav_link('index', 'Home') }}
-				  	{{ m.nav_link('map', 'Map') }}
-					{{ m.nav_link('contact', 'Contact') }}
-                    {{ m.nav_link('files', 'Files') }}
-				 	<div class="right menu">
-				 		<!-- User is logged in -->
-				      	{% if current_user.is_authenticated %}
-				      		<div class="item">
-				        		<a class="ui primary button" href="/user/account">{{ current_user.full_name }}</a>
-				    		</div>
-				    		<div class="item">
-				        		<a class="ui default button" href="/user/signout">Sign out</a>
-				    		</div>
-			          	<!-- User is not logged in -->
-			          	{% else %}
-			          		<div class="item">
-				        		<a class="ui primary button" href="/user/signin">Sign in</a>
-				    		</div>
-				    		<div class="item">
-				        		<a class="ui default button" href="/user/signup">Sign up</a>
-				    		</div>
-						{% endif %}
-			  		</div>
-				</div>
-			{% endblock %}
-   		</div>
-   		<!-- Message flashing -->
-		{% with messages = get_flashed_messages(with_categories=true) %}
-		  	{% if messages %}
-		    	<ul>
-		    		{% for category, message in messages %}
-		      			<li class="ui {{ category }} message flash">{{ message }}</li>
-		    		{% endfor %}
-		    	</ul>
-		  	{% endif %}
-		{% endwith %}
-   		<div id="body" class="body">
-   			{% block content %}{% endblock %}
-   		</div>
-		<div id="footer">
-			<div class="ui divider"></div>
-	    		<div class="ui divided horizontal footer link list">
-			      	<div class="item">
-			        	Max Halford
-			      	</div>
-			      	<div class="item">
-			        	<a href="https://github.com/MaxHalford"><i class="github icon"></i></a>
-			      	</div>
-	    		</div>
-	  		</div>
-		</div>
-	</body>
+<body id="container">
+<div id="header">
+    {% block head %}
+        <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
+        <meta charset="UTF-8">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+        <!-- jQuery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <!-- Semantic Main CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css"/>
+        <!-- Semantic Reset CSS -->
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/components/reset.min.css"/>
+        <!-- Semantic Menu CSS -->
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/components/menu.min.css"/>
+        <!-- Main Semantic JS  -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.js"></script>
+        <!-- Noty JS/CSS -->
+        <script src="{{ url_for('static', filename='components/noty/lib/noty.js') }}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='components/noty/lib/noty.css') }}">
+        <!-- Dropzone file uploads -->
+        {#                {{ dropzone.include_dropzone() }}#}
+        <script src="{{ url_for('static', filename='js/dropzone.js') }}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/dropzone.css') }}">
+        <script>
+            var delete_these = []
+            Dropzone.options.myDropzone = false;
+            var cleanFilename = function (name) {
+                return name.toLowerCase().replace(/[^\w]/gi, '');
+            };
+            Dropzone.options.myDropzone = {
+                paramName: "file", // The name that will be used to transfer the filemaxFilesize: % d, // MB
+                acceptedFiles: 'image/*, audio/*, video/*, text/*, application/*',
+                maxFiles: 15,
+                url: "{{ url_for('upload') }}",
+                maxFilesize: 5,
+                parallelUploads: 100,
+                uploadMultiple: true,
+                autoProcessQueue: false,
+                addRemoveLinks: true,
+                method: "POST",
+                removedfile: function (file) {
+                    if (this.files.length == 0) {
+                        $("button#dropzoneButton").hide();
+                    }
+                    var _ref;
+                    return (_ref = file.previewElement) != null ? _ref.parentNode.removeChild(file.previewElement) : void 0;
+                },
+                init: function () {
+                    var submitButton = document.querySelector("button#dropzoneButton");
+                    var myDropzone = this
+                    submitButton.addEventListener("click", function () {
+                        $("#dropzoneButton").addClass('loading');
+                        myDropzone.processQueue();
+                    });
+                    this.on("addedfile", function () {
+                        $("button#dropzoneButton").show();
+                        // Show submit button here and/or inform user to click it.
+                    });
+                    this.on("success", function (file) {
+                        if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                            window.location.replace('/files');
+                        }
+                    });
+                }
+            };
+        </script>
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+        <!-- Browser tab name -->
+        <title>{{ title }}</title>
+        <!-- Navbar -->
+        <div class="ui attached inverted menu">
+            {{ m.nav_link('index', 'Home') }}
+            {{ m.nav_link('map', 'Map') }}
+            {{ m.nav_link('contact', 'Contact') }}
+            {% if current_user.is_authenticated %}
+                {{ m.nav_link('files', 'Files') }}
+                {{ m.nav_link('upload', 'Upload') }}
+            {% endif %}
+            <div class="right menu">
+                <!-- User is logged in -->
+                {% if current_user.is_authenticated %}
+                    <div class="item">
+                        <a class="ui primary button" href="/user/account">{{ current_user.full_name }}</a>
+                    </div>
+                    <div class="item">
+                        <a class="ui default button" href="/user/signout">Sign out</a>
+                    </div>
+                    <!-- User is not logged in -->
+                {% else %}
+                    <div class="item">
+                        <a class="ui primary button" href="/user/signin">Sign in</a>
+                    </div>
+                    <div class="item">
+                        <a class="ui default button" href="/user/signup">Sign up</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endblock %}
+</div>
+<!-- Message flashing -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="ui {{ category }} message flash">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+<div id="body" class="body">
+    <div class="ui page grid">
+        {% block content %}{% endblock %}
+    </div>
+<div class="ui hidden section divider"></div>
+    <div id="footer">
+        <div class="ui divider"></div>
+        <div class="ui divided horizontal footer link list">
+            <div class="item">
+                Max Halford
+            </div>
+            <div class="item">
+                <a href="https://github.com/MaxHalford"><i class="github icon"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
 </html>

@@ -6,33 +6,272 @@
 
 {% block content %}
 
-    <h1 class="ui header">Your Files</h1>
-    <div class ="ui link cards">
-    {% for assoc in current_user.files %}
-        <div class="card">
-            <div class="image">
-              <img src="{{ url_for('static', filename='uploads/' + os.path.basename(assoc.file.thumbnail_path)) }}">
+    <div class="ui one column row">
+        <h1 class="ui column header">{{ current_user.full_name + "'s " + title }}</h1>
+    </div>
+    <div class="ui section one column row divider"></div>
+        {% if current_user.files|length < 3 %}
+        <div class="ui two stackable special cards" id="cardCount">
+        {% else %}
+        <div class="ui three stackable special cards" id="cardCount">
+        {% endif %}
+        {% for assoc in current_user.files %}
+            <div class="ui card" id="{{ assoc.file.id }}">
+                <div class="content fluid">
+                    <div class="ui sub header">{{ assoc.file.file_name }}</div>
+                </div>
+                <div class="blurring dimmable image">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="bottom">
+                                <a href="{{ url_for('static', filename='img/error.png') }}" download>
+                                    <button class="ui green inverted button downloadButton"><i
+                                            class="download icon"></i>
+                                    </button>
+                                </a>
+                                <button class="ui inverted red button deleteButton"><i class="trash icon"></i>
+                                </button>
+                                <button class="ui inverted blue button shareButton"><i class="share icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <img src="{{ url_for('static', filename="uploads/" + filename(assoc.file.thumbnail_path)) }}">
+                </div>
+                <div class="content">
+                    <a class="header">Team Fu</a>
+                    <div class="meta">
+                        <span class="date">Create in Sep 2014</span>
+                    </div>
+                </div>
             </div>
-            <div class="content">
-              <div class="header">{{ current_user.full_name }}</div>
-              <div class="meta">
-                <a>Friends</a>
-              </div>
-              <div class="description">
-                {{ assoc.file.description }}
-              </div>
-            </div>
-            <div class="extra content">
-              <span class="right floated">
-                Joined in 2013
-              </span>
-              <span>
-                <i class="user icon"></i>
-                {{ bro }} Friends
-              </span>
+        {% endfor %}
+    </div>
+    <div class="ui modal small share">
+        <i class="close icon"></i>
+        <div class="header">
+            Share a File
+        </div>
+        <div class="content">
+            <div class="description">
+                <div class="ui header">Choose who you want to share this file with!</div>
+                <div id="user_search" class="ui search hidden">
+                    <form class="ui form" id="shareForm">
+                        <div class="ui icon input">
+                            <input id="userEmail" name="" class="prompt" type="text" placeholder="Search users...">
+                            <i class="search icon"></i>
+                        </div>
+                    </form>
+                    <div class="results"></div>
+                </div>
             </div>
         </div>
-    {%  endfor %}
+        <div class="actions">
+            <div class="ui black deny button">
+                I don't wanna
+            </div>
+            <button class="ui blue right labeled icon button" form="shareForm" type="submit">
+                Share It!
+                <i class="share icon"></i>
+            </button>
+        </div>
+    </div>
+    <div class="ui small modal delete">
+        <div class="header">
+            Remove File
+        </div>
+        <div class="content">
+            <p>Are you sure you want to delete this file?</p>
+        </div>
+        <div class="actions">
+            <div class="ui blue button">
+                I wanna keep it!
+            </div>
+            <div class="ui red right labeled icon button" id="deleteFile" name="">
+                Trash it
+                <i class="trash icon"></i>
+            </div>
+        </div>
     </div>
 
+
+    <script type=text/javascript>
+        $(document).ready(function () {
+            $(function () {
+                resizeCards();
+            });
+            var content = [];
+            var email_array = [];
+            var tmp = {};
+            {% for user in users %}
+                tmp = {title: "{{ user }}"};
+                content.push(tmp);
+                email_array.push("{{ user }}")
+            {%  endfor %}
+            function resizeCards() {
+                if ($(".ui.card").length <= 3) {
+                    $(".ui.cards").removeClass("three");
+                    $(".ui.cards").addClass("two");
+                }
+            }
+            function notifySuccess(message) {
+                new Noty({
+                    text: message,
+                    layout: 'topRight',
+                    theme: 'relax',
+                    type: 'success',
+                    timeout: 3000
+                }).show()
+            }
+
+            function notifyError(message, container_name) {
+                new Noty({
+                    text: message,
+                    //layout: 'topRight',
+                    theme: 'relax',
+                    type: 'error',
+                    timeout: 3000,
+                    container: container_name || false
+                });
+            }
+            function notifyInformation(message) {
+                new Noty({
+                    text: message,
+                    layout: 'topRight',
+                    theme: 'relax',
+                    type: 'information',
+                    timeout: 3000
+                })
+            }
+            $('.ui.search')
+                .search({
+                    source: content
+                });
+            $('.shareButton').click(function () {
+                $('.ui.modal.share').modal('show');
+                var fileID = $(this).closest('.card').prop('id');
+                $('#userEmail').attr('name', fileID);
+            });
+            $('.deleteButton').click(function () {
+                $('.ui.modal.delete').modal('show');
+                var fileID = $(this).closest('.card').prop('id');
+                $('#deleteFile').attr('name', fileID);
+            })
+            $('#shareForm').submit(function (e) {
+                var user = $('#userEmail').val();
+                var fileID = $('#userEmail').attr("name")
+                if ($.inArray(user, email_array) != -1) {
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '{{ url_for('share') }}',
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify({"email": user, "file": fileID}),
+                        success: function (r) {
+                            notifySuccess("Your file has been shared with " + user);
+                        }
+                    });
+                }
+                else {
+                    e.preventDefault()
+                    notifyError("Please enter a valid user.", '.ui.modal.share');
+                }
+            });
+            $('#deleteFile').click(function () {
+                var self = this
+                var fileID = $('#deleteFile').attr("name")
+                console.log(fileID)
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '{{ url_for('delete_file') }}',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({"file": fileID}),
+                    success: function (r) {
+                        $('.ui.modal.delete').modal('hide');
+                        $('#' + fileID).fadeOut(2000, function () {
+                            $('#' + fileID).remove();
+                            resizeCards();
+                        });
+                        notifySuccess('Your file has been deleted.');
+                    }
+                }).fail(function () {
+                    $('.ui.modal.delete').modal('hide');
+                    notifyError('We encountered an error while attempting to delete your file.')
+                });
+            });
+            $('.special.cards .image').dimmer({
+                on: 'hover'
+            });
+        })
+    </script>
+
 {% endblock %}
+
+{#{% extends "layout.html" %}#}
+{##}
+{#{% block head %}#}
+{#    {{ super() }}#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{##}
+{#    <h1 class="ui header">Your Files</h1>#}
+{#    <div class="ui link cards">#}
+{#        {% for assoc in current_user.files %}#}
+{#            <div class="card">#}
+{#                <div class="image">#}
+{#                    <img src="{{ url_for('static', filename='uploads/' + os.path.basename(assoc.file.thumbnail_path)) }}">#}
+{#                </div>#}
+{#                <div class="content">#}
+{#                    <div class="header">{{ current_user.full_name }}</div>#}
+{#                    <div class="meta">#}
+{#                        <a>Friends</a>#}
+{#                    </div>#}
+{#                    <div class="description">#}
+{#                        {{ assoc.file.description }}#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="extra content">#}
+{#              <span class="right floated">#}
+{#                Joined in 2013#}
+{#              </span>#}
+{#                    <span>#}
+{#                <i class="user icon"></i>#}
+{#                {{ bro }} Friends#}
+{#              </span>#}
+{#                </div>#}
+{#            </div>#}
+{#        {% endfor %}#}
+{#    </div>#}
+{##}
+{#{% endblock %}#}
+{#{% for assoc in current_user.files %}#}
+{#    <div class="card">#}
+{#        <div class="content">#}
+{#            <div class="header">Project Timeline</div>#}
+{#        </div>#}
+{#        <div class="blurring dimmable image">#}
+{#            <div class="ui dimmer">#}
+{#                <div class="content">#}
+{#                    <div class="bottom">#}
+{#                        <a href="{{ url_for('static', filename='img/'+ assoc.file.file) }}" download>#}
+{#                            <button class="ui green inverted button downloadButton"><i#}
+{#                                    class="download icon"></i>#}
+{#                            </button>#}
+{#                        </a>#}
+{#                        <button class="ui inverted red button deleteButton"><i class="trash icon"></i></button>#}
+{#                        <button class="ui inverted blue button shareButton"><i class="share icon"></i>#}
+{#                        </button>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <img src="{{ url_for('static', filename="img/error.png") }}">#}
+{#        </div>#}
+{#        <div class="content">#}
+{#            <a class="header">Team Fu</a>#}
+{#            <div class="meta">#}
+{#                <span class="date">Create in Sep 2014</span>#}
+{#            </div>#}
+{#        </div>#}
+{#{% endfor %}#}

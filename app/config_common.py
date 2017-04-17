@@ -5,9 +5,9 @@ TIME_FMT = '%Y-%m-%d %H:%M:%S %Z%z'
 SECRET_KEY = 'houdini'
 
 # LDAP server details
-LDAP_SERVER =''
-LDAP_SERVICE_USERNAME = ''
-LDAP_SERVICE_PASSWORD = ''
+# LDAP_SERVER =''
+# LDAP_SERVICE_USERNAME = ''
+# LDAP_SERVICE_PASSWORD = ''
 
 # Admin credentials
 ADMIN_CREDENTIALS = ('admin', 'pa$$word')
@@ -25,7 +25,7 @@ MAIL_USERNAME = 'NetSecShare'
 MAIL_PASSWORD = 'NetSecShare123'
 ADMINS = ['kylebowman99@gmail.com']
 
-# Number of times a password is hashed
+# Number of times a password is hashe
 BCRYPT_LOG_ROUNDS = 12
 
 # Permission table
@@ -33,3 +33,5 @@ Permission = {1: 'Read',}
 
 # Flask-Uploads config options
 UPLOADS_DEFAULT_DEST = 'app/static'
+UPLOADS_DIR = 'static/uploads'
+UPLOAD_PATH = 'app/static/uploads'

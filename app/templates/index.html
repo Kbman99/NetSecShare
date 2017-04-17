@@ -5,13 +5,24 @@
 {% endblock %}
 
 {% block content %}
-
-	<h1 class="ui header">{{ title }}</h1>
-
-	{% if current_user.is_authenticated %}
-	  	<h2 class="ui header">Hi {{ current_user.first_name }}!</h2>
-
-	{% endif %}
-
+    <div class="one column row centered">
+        <h1 class="ui icon header">
+            <i class="lock icon"></i>
+            <div class="content">
+                NetSecShare
+                <div class="sub header">Where your privacy matters</div>
+            </div>
+        </h1>
+    </div>
+    <div class="ui section divider"></div>
+    <div class="ui one column row">
+        <h2 class="ui header">
+            <i class="question icon"></i>
+            What is NetSecShare
+        </h2>
+    </div>
+    <div class="ui text container">
+    </div>
+    </div>
 
 {% endblock %}

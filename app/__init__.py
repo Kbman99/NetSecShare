@@ -1,5 +1,6 @@
 from flask import Flask
-import sys
+import os
+import mimetypes
 
 app = Flask(__name__)
 
@@ -46,3 +47,5 @@ def load_user(email):
 
 from app import admin
 
+app.jinja_env.globals.update(guess_type=mimetypes.guess_type)
+app.jinja_env.globals.update(filename=os.path.basename)
