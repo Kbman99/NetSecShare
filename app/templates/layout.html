@@ -73,7 +73,6 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
         <!-- Browser tab name -->
         <title>{{ title }}</title>
-        <!-- Navbar -->
         <nav id="main_navigation">
 
             <div class="ui grid">
@@ -86,8 +85,6 @@
                              class="ui inverted borderless attached menu huge page grid">
 
                             {{ m.nav_link('index', 'Home') }}
-
-                            {{ m.nav_link('map', 'Map') }}
 
                             {{ m.nav_link('contact', 'Contact') }}
 
@@ -137,333 +134,62 @@
                     </div>
 
                 </div>
+                <div class="mobile only row">
+
+                    <div class="column">
+
+                        <div id="main_navigation_collapsed"
+                             class="ui large inverted green borderless attached fluid menu">
+                            <a href="{{ url_for('index') }}" class="brand item"><strong><i
+                                    class="lock icon"></i>NetSecShare</strong></a>
+                            <div class="right menu"></div>
+                            <div class="right menu open" style="margin-left: 0 !important;">
+                                <a href="#" class="menu item toggle">
+                                    <i class="content icon"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div id="navbar2"
+                             class="ui large vertical green borderless attached stacked fluid menu transition hidden"
+                             style="display: none;">
+
+                            <a href="{{ url_for('index') }}" class="item active">Home<i
+                                    class="home icon"></i></a>
+
+
+                            <a href="{{ url_for('contact') }}" class="item"> Contact<i
+                                    class="mail icon"></i></a>
+
+                            {% if not current_user.is_authenticated %}
+                                <a href="{{ url_for('userbp.signin') }}" class="item"><i
+                                        class="sign in icon"></i> Sign In</a>
+
+
+                                <a href="{{ url_for('userbp.signup') }}" class="item"><i
+                                        class="add user icon"></i> Sign Up</a>
+
+                            {% else %}
+                                <a href="{{ url_for('upload') }}" class="item">Upload <i
+                                        class="upload icon"></i></a>
+
+                                <a href="{{ url_for('files') }}" class="item"> Contact <i
+                                        class="add user icon"></i></a>
+
+                                <div class="item header">{{ user.full_name }}</div>
+
+                                <a class="item"
+                                   href="{{ url_for('account') }}">Account</a>
+
+                                <a class="item"
+                                   href="{{ url_for('logout') }}">Log Out<i
+                                        class="sign out icon"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            {#        <div class="mobile only row">#}
-            {#            <div class="column">#}
-            {##}
-            {#                <div id="main_navigation_collapsed" class="ui inverted blue borderless attached fluid menu">#}
-            {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/" class="brand item"><strong>v.#}
-            {#                        4.2.52</strong></a>#}
-            {#                    <div class="right menu">#}
-            {##}
-            {##}
-            {#                        <div class="ui dropdown item" tabindex="0">#}
-            {##}
-            {#                            <img src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/GB.png"#}
-            {#                                 class="ui middle aligned image" style="max-width: inherit !important;"#}
-            {#                                 alt="lib/flags-iso/flat/24/GB"> <i class="dropdown icon"></i>#}
-            {##}
-            {#                            <div class="menu transition hidden" tabindex="-1">#}
-            {##}
-            {#                                <a class="item active " href="http://iridadesign.com/starter-public-edition-4/www/"><img#}
-            {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/GB.png"#}
-            {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
-            {#                                        alt="lib/flags-iso/flat/24/GB"> English</a>#}
-            {#                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/bg/"><img#}
-            {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/BG.png"#}
-            {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
-            {#                                        alt="lib/flags-iso/flat/24/BG"> Български</a>#}
-            {#                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/fr/"><img#}
-            {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/FR.png"#}
-            {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
-            {#                                        alt="lib/flags-iso/flat/24/FR"> Français</a>#}
-            {#                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/pl/"><img#}
-            {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/PL.png"#}
-            {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
-            {#                                        alt="lib/flags-iso/flat/24/PL"> Polski</a>#}
-            {##}
-            {#                            </div>#}
-            {##}
-            {#                        </div>#}
-            {##}
-            {#                    </div>#}
-            {#                    <div class="right menu open" style="margin-left: 0 !important;">#}
-            {#                        <a href="" class="menu item toggle">#}
-            {#                            <i class="content icon"></i>#}
-            {#                        </a>#}
-            {#                    </div>#}
-            {#                </div>#}
-            {##}
-            {#                <div class="ui vertical inverted blue borderless attached stacked fluid menu transition hidden"#}
-            {#                     style="display: none;">#}
-            {##}
-            {##}
-            {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/" class="item active"><i#}
-            {#                            class="home icon"></i> Home</a>#}
-            {##}
-            {##}
-            {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/readme" class="item"><i#}
-            {#                            class="info circle icon"></i> README</a>#}
-            {##}
-            {##}
-            {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/contact-page-test" class="item"><i#}
-            {#                            class="mail icon"></i> Contact Page Test</a>#}
-            {##}
-            {##}
-            {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground" class="item"><i#}
-            {#                            class="sun icon"></i> The Playground</a>#}
-            {##}
-            {##}
-            {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/non-mvc/demo.php" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Non-MVC#}
-            {#                        Page Demonstration</a>#}
-            {##}
-            {##}
-            {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/non-mvc/http_build_url_test.php"#}
-            {#                       class="item">&nbsp;&nbsp;&nbsp;&nbsp;Testing http_build_url()</a>#}
-            {##}
-            {##}
-            {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground/captcha" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Captcha#}
-            {#                        Test</a>#}
-            {##}
-            {##}
-            {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground/mustache" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Mustache#}
-            {#                        Parser Test</a>#}
-            {##}
-            {##}
-            {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground" class="item">&nbsp;&nbsp;&nbsp;&nbsp;And#}
-            {#                        so on, see the Playground index page</a>#}
-            {##}
-            {##}
-            {#                    <div class="item header">Theme: Front Default</div>#}
-            {##}
-            {#                    <a class="item active "#}
-            {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_default">&nbsp;&nbsp;&nbsp;&nbsp;Front#}
-            {#                        Default</a>#}
-            {#                    <a class="item"#}
-            {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_default">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-            {#                        UI Default</a>#}
-            {#                    <a class="item"#}
-            {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_amazon">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-            {#                        UI Amazon</a>#}
-            {#                    <a class="item"#}
-            {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_basic">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-            {#                        UI Basic</a>#}
-            {#                    <a class="item"#}
-            {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_chubby">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-            {#                        UI Chubby</a>#}
-            {#                    <a class="item"#}
-            {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_classic">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-            {#                        UI Classic</a>#}
-            {#                    <a class="item"#}
-            {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_flat">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-            {#                        UI Flat</a>#}
-            {#                    <a class="item"#}
-            {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_github">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-            {#                        UI GitHub</a>#}
-            {#                    <a class="item"#}
-            {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_material">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-            {#                        UI Material</a>#}
-            {##}
-            {##}
-            {#                </div>#}
-            {##}
-            {#            </div>#}
-            {#        </div>#}
-
-        </div>
-
         </nav>
-        {#        <div class="ui attached inverted stack menu">#}
-        {#            {{ m.nav_link('index', 'Home') }}#}
-        {#            {{ m.nav_link('map', 'Map') }}#}
-        {#            {{ m.nav_link('contact', 'Contact') }}#}
-        {#            {% if current_user.is_authenticated %}#}
-        {#                {{ m.nav_link('files', 'Files') }}#}
-        {#                {{ m.nav_link('upload', 'Upload') }}#}
-        {#            {% endif %}#}
-        {#            <div class="right menu">#}
-        {#                <!-- User is logged in -->#}
-        {#                {% if current_user.is_authenticated %}#}
-        {#                    <div class="item">#}
-        {#                        <a class="ui primary button" href="/user/account">{{ current_user.full_name }}</a>#}
-        {#                    </div>#}
-        {#                    <div class="item">#}
-        {#                        <a class="ui default button" href="/user/signout">Sign out</a>#}
-        {#                    </div>#}
-        {#                    <!-- User is not logged in -->#}
-        {#                {% else %}#}
-        {#                    <div class="item">#}
-        {#                        <a class="ui primary button" href="/user/signin">Sign in</a>#}
-        {#                    </div>#}
-        {#                    <div class="item">#}
-        {#                        <a class="ui default button" href="/user/signup">Sign up</a>#}
-        {#                    </div>#}
-        {#                {% endif %}#}
-        {#            </div>#}
-        {#        </div>#}
-        {#        <nav id="main_navigation">#}
-        {##}
-        {#            <div class="ui grid">#}
-        {##}
-        {#                <div class="computer tablet only row">#}
-        {##}
-        {#                    <div class="column">#}
-        {##}
-        {#                        <div id="main_navigation_expanded" class="ui inverted blue borderless attached menu page grid">#}
-        {##}
-        {#                            {{ m.nav_link('index', 'Home') }}#}
-        {##}
-        {#                            {{ m.nav_link('map', 'Map') }}#}
-        {##}
-        {#                            {{ m.nav_link('contact', 'Contact') }}#}
-        {##}
-        {#                            {% if current_user.is_authenticated %}#}
-        {#                                {{ m.nav_link('files', 'Files') }}#}
-        {#                                {{ m.nav_link('upload', 'Upload') }}#}
-        {#                            {% endif %}#}
-        {##}
-        {##}
-        {#                            <div class="right menu">#}
-        {##}
-        {##}
-        {#                                <div class="ui dropdown item" tabindex="0">#}
-        {##}
-        {#                                    {% if current_user.is_authenticated %}#}
-        {#                                    Account#}
-        {#                                    <i class="dropdown icon"></i>#}
-        {##}
-        {#                                    <div class="menu" tabindex="-1">#}
-        {#                                        {{ m.nav_link('userbp.signout', 'Sign Out') }}#}
-        {#                                        {{ m.nav_link('files', 'Files') }}#}
-        {#                                        {{ m.nav_link('upload', 'Upload') }}#}
-        {#                                    </div>#}
-        {#                                    {% endif %}#}
-        {##}
-        {#                                </div>#}
-        {##}
-        {#                            </div>#}
-        {##}
-        {#                        </div>#}
-        {##}
-        {#                    </div>#}
-        {#                </div>#}
-        {##}
-        {#        <div class="mobile only row">#}
-        {#            <div class="column">#}
-        {##}
-        {#                <div id="main_navigation_collapsed" class="ui inverted blue borderless attached fluid menu">#}
-        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/" class="brand item"><strong>v.#}
-        {#                        4.2.52</strong></a>#}
-        {#                    <div class="right menu">#}
-        {##}
-        {##}
-        {#                        <div class="ui dropdown item" tabindex="0">#}
-        {##}
-        {#                            <img src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/GB.png"#}
-        {#                                 class="ui middle aligned image" style="max-width: inherit !important;"#}
-        {#                                 alt="lib/flags-iso/flat/24/GB"> <i class="dropdown icon"></i>#}
-        {##}
-        {#                            <div class="menu transition hidden" tabindex="-1">#}
-        {##}
-        {#                                <a class="item active " href="http://iridadesign.com/starter-public-edition-4/www/"><img#}
-        {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/GB.png"#}
-        {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
-        {#                                        alt="lib/flags-iso/flat/24/GB"> English</a>#}
-        {#                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/bg/"><img#}
-        {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/BG.png"#}
-        {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
-        {#                                        alt="lib/flags-iso/flat/24/BG"> Български</a>#}
-        {#                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/fr/"><img#}
-        {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/FR.png"#}
-        {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
-        {#                                        alt="lib/flags-iso/flat/24/FR"> Français</a>#}
-        {#                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/pl/"><img#}
-        {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/PL.png"#}
-        {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
-        {#                                        alt="lib/flags-iso/flat/24/PL"> Polski</a>#}
-        {##}
-        {#                            </div>#}
-        {##}
-        {#                        </div>#}
-        {##}
-        {#                    </div>#}
-        {#                    <div class="right menu open" style="margin-left: 0 !important;">#}
-        {#                        <a href="" class="menu item toggle">#}
-        {#                            <i class="content icon"></i>#}
-        {#                        </a>#}
-        {#                    </div>#}
-        {#                </div>#}
-        {##}
-        {#                <div class="ui vertical inverted blue borderless attached stacked fluid menu transition hidden"#}
-        {#                     style="display: none;">#}
-        {##}
-        {##}
-        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/" class="item active"><i#}
-        {#                            class="home icon"></i> Home</a>#}
-        {##}
-        {##}
-        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/readme" class="item"><i#}
-        {#                            class="info circle icon"></i> README</a>#}
-        {##}
-        {##}
-        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/contact-page-test" class="item"><i#}
-        {#                            class="mail icon"></i> Contact Page Test</a>#}
-        {##}
-        {##}
-        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground" class="item"><i#}
-        {#                            class="sun icon"></i> The Playground</a>#}
-        {##}
-        {##}
-        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/non-mvc/demo.php" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Non-MVC#}
-        {#                        Page Demonstration</a>#}
-        {##}
-        {##}
-        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/non-mvc/http_build_url_test.php"#}
-        {#                       class="item">&nbsp;&nbsp;&nbsp;&nbsp;Testing http_build_url()</a>#}
-        {##}
-        {##}
-        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground/captcha" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Captcha#}
-        {#                        Test</a>#}
-        {##}
-        {##}
-        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground/mustache" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Mustache#}
-        {#                        Parser Test</a>#}
-        {##}
-        {##}
-        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground" class="item">&nbsp;&nbsp;&nbsp;&nbsp;And#}
-        {#                        so on, see the Playground index page</a>#}
-        {##}
-        {##}
-        {#                    <div class="item header">Theme: Front Default</div>#}
-        {##}
-        {#                    <a class="item active "#}
-        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_default">&nbsp;&nbsp;&nbsp;&nbsp;Front#}
-        {#                        Default</a>#}
-        {#                    <a class="item"#}
-        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_default">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-        {#                        UI Default</a>#}
-        {#                    <a class="item"#}
-        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_amazon">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-        {#                        UI Amazon</a>#}
-        {#                    <a class="item"#}
-        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_basic">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-        {#                        UI Basic</a>#}
-        {#                    <a class="item"#}
-        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_chubby">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-        {#                        UI Chubby</a>#}
-        {#                    <a class="item"#}
-        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_classic">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-        {#                        UI Classic</a>#}
-        {#                    <a class="item"#}
-        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_flat">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-        {#                        UI Flat</a>#}
-        {#                    <a class="item"#}
-        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_github">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-        {#                        UI GitHub</a>#}
-        {#                    <a class="item"#}
-        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_material">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-        {#                        UI Material</a>#}
-        {##}
-        {##}
-        {#                </div>#}
-        {##}
-        {#            </div>#}
-        {#        </div>#}
-        {##}
-        {#            </div>#}
-        {##}
-        {#        </nav>#}
     {% endblock %}
 </div>
 <div id="body" class="body">
@@ -477,179 +203,6 @@
             </ul>
         {% endif %}
     {% endwith %}
-    {#<div id="body" class="body">#}
-    {#    <nav id="main_navigation">#}
-    {##}
-    {#        <div class="ui grid">#}
-    {##}
-    {#            <div class="computer tablet only row">#}
-    {##}
-    {#                <div class="column">#}
-    {##}
-    {#                    <div id="main_navigation_expanded" class="ui inverted blue borderless attached menu large page grid">#}
-    {##}
-    {#                        {{ m.nav_link('index', 'Home') }}#}
-    {##}
-    {#                        {{ m.nav_link('map', 'Map') }}#}
-    {##}
-    {#                        {{ m.nav_link('contact', 'Contact') }}#}
-    {##}
-    {#                        {% if current_user.is_authenticated %}#}
-    {#                            {{ m.nav_link('files', 'Files') }}#}
-    {#                            {{ m.nav_link('upload', 'Upload') }}#}
-    {#                        {% endif %}#}
-    {##}
-    {##}
-    {#                        <div class="right menu">#}
-    {##}
-    {##}
-    {#                            <div class="ui dropdown item" tabindex="0">#}
-    {##}
-    {#                                {% if current_user.is_authenticated %}#}
-    {#                                    Account#}
-    {#                                    <i class="dropdown icon"></i>#}
-    {##}
-    {#                                    <div class="menu">#}
-    {#                                        {{ m.nav_link('userbp.signout', 'Sign Out') }}#}
-    {#                                        {{ m.nav_link('files', 'Files') }}#}
-    {#                                        {{ m.nav_link('upload', 'Upload') }}#}
-    {#                                    </div>#}
-    {#                                {% endif %}#}
-    {##}
-    {#                            </div>#}
-    {##}
-    {#                        </div>#}
-    {##}
-    {#                    </div>#}
-    {##}
-    {#                </div>#}
-    {#            </div>#}
-    {##}
-    {#        <div class="mobile only row">#}
-    {#            <div class="column">#}
-    {##}
-    {#                <div id="main_navigation_collapsed" class="ui inverted blue borderless attached fluid menu">#}
-    {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/" class="brand item"><strong>v.#}
-    {#                        4.2.52</strong></a>#}
-    {#                    <div class="right menu">#}
-    {##}
-    {##}
-    {#                        <div class="ui dropdown item" tabindex="0">#}
-    {##}
-    {#                            <img src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/GB.png"#}
-    {#                                 class="ui middle aligned image" style="max-width: inherit !important;"#}
-    {#                                 alt="lib/flags-iso/flat/24/GB"> <i class="dropdown icon"></i>#}
-    {##}
-    {#                            <div class="menu transition hidden" tabindex="-1">#}
-    {##}
-    {#                                <a class="item active " href="http://iridadesign.com/starter-public-edition-4/www/"><img#}
-    {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/GB.png"#}
-    {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
-    {#                                        alt="lib/flags-iso/flat/24/GB"> English</a>#}
-    {#                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/bg/"><img#}
-    {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/BG.png"#}
-    {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
-    {#                                        alt="lib/flags-iso/flat/24/BG"> Български</a>#}
-    {#                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/fr/"><img#}
-    {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/FR.png"#}
-    {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
-    {#                                        alt="lib/flags-iso/flat/24/FR"> Français</a>#}
-    {#                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/pl/"><img#}
-    {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/PL.png"#}
-    {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
-    {#                                        alt="lib/flags-iso/flat/24/PL"> Polski</a>#}
-    {##}
-    {#                            </div>#}
-    {##}
-    {#                        </div>#}
-    {##}
-    {#                    </div>#}
-    {#                    <div class="right menu open" style="margin-left: 0 !important;">#}
-    {#                        <a href="" class="menu item toggle">#}
-    {#                            <i class="content icon"></i>#}
-    {#                        </a>#}
-    {#                    </div>#}
-    {#                </div>#}
-    {##}
-    {#                <div class="ui vertical inverted blue borderless attached stacked fluid menu transition hidden"#}
-    {#                     style="display: none;">#}
-    {##}
-    {##}
-    {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/" class="item active"><i#}
-    {#                            class="home icon"></i> Home</a>#}
-    {##}
-    {##}
-    {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/readme" class="item"><i#}
-    {#                            class="info circle icon"></i> README</a>#}
-    {##}
-    {##}
-    {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/contact-page-test" class="item"><i#}
-    {#                            class="mail icon"></i> Contact Page Test</a>#}
-    {##}
-    {##}
-    {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground" class="item"><i#}
-    {#                            class="sun icon"></i> The Playground</a>#}
-    {##}
-    {##}
-    {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/non-mvc/demo.php" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Non-MVC#}
-    {#                        Page Demonstration</a>#}
-    {##}
-    {##}
-    {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/non-mvc/http_build_url_test.php"#}
-    {#                       class="item">&nbsp;&nbsp;&nbsp;&nbsp;Testing http_build_url()</a>#}
-    {##}
-    {##}
-    {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground/captcha" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Captcha#}
-    {#                        Test</a>#}
-    {##}
-    {##}
-    {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground/mustache" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Mustache#}
-    {#                        Parser Test</a>#}
-    {##}
-    {##}
-    {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground" class="item">&nbsp;&nbsp;&nbsp;&nbsp;And#}
-    {#                        so on, see the Playground index page</a>#}
-    {##}
-    {##}
-    {#                    <div class="item header">Theme: Front Default</div>#}
-    {##}
-    {#                    <a class="item active "#}
-    {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_default">&nbsp;&nbsp;&nbsp;&nbsp;Front#}
-    {#                        Default</a>#}
-    {#                    <a class="item"#}
-    {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_default">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-    {#                        UI Default</a>#}
-    {#                    <a class="item"#}
-    {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_amazon">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-    {#                        UI Amazon</a>#}
-    {#                    <a class="item"#}
-    {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_basic">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-    {#                        UI Basic</a>#}
-    {#                    <a class="item"#}
-    {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_chubby">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-    {#                        UI Chubby</a>#}
-    {#                    <a class="item"#}
-    {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_classic">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-    {#                        UI Classic</a>#}
-    {#                    <a class="item"#}
-    {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_flat">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-    {#                        UI Flat</a>#}
-    {#                    <a class="item"#}
-    {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_github">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-    {#                        UI GitHub</a>#}
-    {#                    <a class="item"#}
-    {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_material">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
-    {#                        UI Material</a>#}
-    {##}
-    {##}
-    {#                </div>#}
-    {##}
-    {#            </div>#}
-    {#        </div>#}
-    {##}
-    {#        </div>#}
-    {##}
-    {#    </nav>#}
     <div class="ui page grid">
         {% block content %}{% endblock %}
     </div>
@@ -667,7 +220,23 @@
     </div>
 </div>
 <script>
-    $('.ui.dropdown.item').dropdown();
+    $(document).ready()
+    {
+        $('.ui.dropdown.item').dropdown();
+        $('.right.menu.open').click(function () {
+            {#        $('#navbar2').transition('slide down');#}
+            $("#navbar2").toggle();
+            console.log(document.getElementById("navbar2").style.display)
+            if (document.getElementById("navbar2").style.display == "none") {
+                $("#navbar2").removeClass("visible");
+                $("#navbar2").addClass("hidden");
+            }
+            else {
+                $("#navbar2").removeClass("hidden");
+                $("#navbar2").addClass("visible");
+            }
+        });
+    }
 </script>
 </body>
 </html>

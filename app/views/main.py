@@ -50,6 +50,7 @@ def upload():
                 uploaded_file = models.File(file_path=file_path, description='',original_name=original_filename)
                 current_user.add_files([(uploaded_file, 1)])
                 db.session.commit()
+                logger.info("New file {} uploaded".format(filename), user=current_user.get_id())
             except Exception as e:
                 print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e), e, file=sys.stderr)
         flash("Your files have been uploaded successfully!", "positive")

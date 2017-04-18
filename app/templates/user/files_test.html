@@ -18,13 +18,13 @@
         {% for assoc in current_user.files %}
             <div class="ui card" id="{{ assoc.file.id }}">
                 <div class="content fluid">
-                    <div class="ui sub header">{{ assoc.file.file_name }}</div>
+                    <div class="ui sub header">{{ assoc.file.original_name }}</div>
                 </div>
                 <div class="blurring dimmable image">
                     <div class="ui dimmer">
                         <div class="content">
                             <div class="bottom">
-                                <a href="{{ url_for('static', filename='img/error.png') }}" download>
+                                <a href="{{ url_for('static', filename='uploads' + assoc.file.file_name) }}" download>
                                     <button class="ui green inverted button downloadButton"><i
                                             class="download icon"></i>
                                     </button>

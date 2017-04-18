@@ -22,13 +22,13 @@
 {% for assoc in current_user.files %}
     <div class="ui card" id="{{ assoc.file.id }}">
         <div class="content fluid">
-            <div class="ui sub header">{{ assoc.file.file_name }}</div>
+            <div class="ui sub header">{{ assoc.file.original_name }}</div>
         </div>
         <div class="blurring dimmable image">
             <div class="ui dimmer">
                 <div class="content">
                     <div class="bottom">
-                        <a href="{{ url_for('static', filename='img/error.png') }}" download>
+                        <a href="{{ url_for('static', filename='uploads/' + assoc.file.file_name) }}" download>
                             <button class="ui green inverted button downloadButton"><i
                                     class="download icon"></i>
                             </button>
@@ -120,11 +120,12 @@
                     if ($(".ui.card").length == 2) {
                         $(".ui.cards").addClass("two");
                     }
-                    else{
+                    else {
                         $(".ui.cards").addClass("one");
                     }
                 }
             }
+
             function notifySuccess(message) {
                 new Noty({
                     text: message,
@@ -230,71 +231,3 @@
     </script>
 
 {% endblock %}
-
-{#{% extends "layout.html" %}#}
-{##}
-{#{% block head %}#}
-{#    {{ super() }}#}
-{#{% endblock %}#}
-{##}
-{#{% block content %}#}
-{##}
-{#    <h1 class="ui header">Your Files</h1>#}
-{#    <div class="ui link cards">#}
-{#        {% for assoc in current_user.files %}#}
-{#            <div class="card">#}
-{#                <div class="image">#}
-{#                    <img src="{{ url_for('static', filename='uploads/' + os.path.basename(assoc.file.thumbnail_path)) }}">#}
-{#                </div>#}
-{#                <div class="content">#}
-{#                    <div class="header">{{ current_user.full_name }}</div>#}
-{#                    <div class="meta">#}
-{#                        <a>Friends</a>#}
-{#                    </div>#}
-{#                    <div class="description">#}
-{#                        {{ assoc.file.description }}#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="extra content">#}
-{#              <span class="right floated">#}
-{#                Joined in 2013#}
-{#              </span>#}
-{#                    <span>#}
-{#                <i class="user icon"></i>#}
-{#                {{ bro }} Friends#}
-{#              </span>#}
-{#                </div>#}
-{#            </div>#}
-{#        {% endfor %}#}
-{#    </div>#}
-{##}
-{#{% endblock %}#}
-{#{% for assoc in current_user.files %}#}
-{#    <div class="card">#}
-{#        <div class="content">#}
-{#            <div class="header">Project Timeline</div>#}
-{#        </div>#}
-{#        <div class="blurring dimmable image">#}
-{#            <div class="ui dimmer">#}
-{#                <div class="content">#}
-{#                    <div class="bottom">#}
-{#                        <a href="{{ url_for('static', filename='img/'+ assoc.file.file) }}" download>#}
-{#                            <button class="ui green inverted button downloadButton"><i#}
-{#                                    class="download icon"></i>#}
-{#                            </button>#}
-{#                        </a>#}
-{#                        <button class="ui inverted red button deleteButton"><i class="trash icon"></i></button>#}
-{#                        <button class="ui inverted blue button shareButton"><i class="share icon"></i>#}
-{#                        </button>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#            <img src="{{ url_for('static', filename="img/error.png") }}">#}
-{#        </div>#}
-{#        <div class="content">#}
-{#            <a class="header">Team Fu</a>#}
-{#            <div class="meta">#}
-{#                <span class="date">Create in Sep 2014</span>#}
-{#            </div>#}
-{#        </div>#}
-{#{% endfor %}#}

@@ -72,7 +72,7 @@ class File(db.Model):
         self.description = description
         self.thumbnail_path = os.path.splitext(file_path)[0] + '_thumbnail.png'
         self.thumbnail_name = os.path.splitext(os.path.basename(file_path))[0] + \
-            '_thumbnail.png'
+                              '_thumbnail.png'
 
     @property
     def file(self):

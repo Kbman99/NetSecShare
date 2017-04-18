@@ -28,7 +28,7 @@ def signup():
         user = models.User(
             first_name=form.first_name.data,
             last_name=form.last_name.data,
-#            phone=form.phone.data,
+            #            phone=form.phone.data,
             email=form.email.data,
             confirmation=False,
             password=form.password.data
@@ -36,15 +36,15 @@ def signup():
 
         # Create a ldap_user 
         ldap_user = {
-                    'objectClass': ['inetOrgPerson', 'posixAccount', 'top'],
-                    'givenName': user.first_name,
-                    'sn': user.last_name,
-                    'gidNumber': 500,
-                    'uidNumber': random.randint(1000, 1000000),
-                    'uid': user.email.split('@', 1)[0],
-                    'homeDirectory': '/home/users/' + user.email.split('@', 1)[0],
-                    'userPassword': form.password.data
-                    }
+            'objectClass': ['inetOrgPerson', 'posixAccount', 'top'],
+            'givenName': user.first_name,
+            'sn': user.last_name,
+            'gidNumber': 500,
+            'uidNumber': random.randint(1000, 1000000),
+            'uid': user.email.split('@', 1)[0],
+            'homeDirectory': '/home/users/' + user.email.split('@', 1)[0],
+            'userPassword': form.password.data
+        }
 
         user_ldap_dn = 'cn=' + ldap_user['uid'] + ',ou=Users,dc=ldap,dc=com'
         # Insert the user in the database
@@ -169,7 +169,7 @@ def signin():
                 return redirect(url_for('index'))
             else:
                 print(c)
-                logger.info('User login failed', user=current_user.get_id())
+                logger.info('User login attempt failed failed for user {}'.format(user.get_id()), user="none")
                 flash('The password you have entered is wrong.', 'negative')
                 return redirect(url_for('userbp.signin'))
         else:
@@ -273,7 +273,7 @@ def reset(token):
             user.password = form.password.data
             c.modify(user_ldap_dn,
                      {
-                        'userPassword': [(MODIFY_REPLACE, [form.password.data])]
+                         'userPassword': [(MODIFY_REPLACE, [form.password.data])]
                      })
             # Modify the LDAP user profile with the new password
             c.unbind()
@@ -305,6 +305,7 @@ def files():
 @login_required
 def download(filename):
     uploads = os.path.join(app.root_path, app.config['UPLOADS_DIR'])
+    logger.info("File with name {} downloaded".format(filename), user=current_user.get_id())
     return send_from_directory(directory=uploads, filename=filename, as_attachment=True)
 
 
@@ -322,7 +323,8 @@ def share():
             target_file.share_file(target_user)
             db.session.commit()
             flash("You successfully shared your file with {}".format(user_email), "positive")
-            logger.info("File shared by {} to {}".format(current_user.get_id(), target_user.get_id()), user=current_user.get_id())
+            logger.info("File shared by {} to {}".format(current_user.get_id(), target_user.get_id()),
+                        user=current_user.get_id())
             return jsonify(dict(success=True, message='File shared!'))
         except Exception as e:
             flash("Error encountered while sharing file, contact an admin or try again", "negative")
@@ -344,7 +346,7 @@ def delete_file():
         if item.file is target_file:
             db.session.delete(item)
             db.session.commit()
-            logger.info("User {} no longer can access file {}".format(current_user.get_id(), file_id), user=current_user.get_id())
+            logger.info("User {} no longer can access file {}".format(current_user.get_id(), file_id),
+                        user=current_user.get_id())
             return jsonify(dict(success=True, message="File deleted"))
     return jsonify(dict(success=False, message="Unable to delete file"))
-
