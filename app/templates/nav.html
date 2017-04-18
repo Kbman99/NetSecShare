@@ -1,0 +1,794 @@
+<nav id="main_navigation">
+
+    <div class="ui grid">
+
+        <div class="computer tablet only row">
+
+            <div class="column">
+
+                <div id="main_navigation_expanded" class="ui inverted blue borderless attached menu page grid">
+
+                    {{ m.nav_link('index', 'Home') }}
+
+                    {{ m.nav_link('map', 'Map') }}
+
+                    {{ m.nav_link('contact', 'Contact') }}
+
+                    {% if current_user.is_authenticated %}
+                        {{ m.nav_link('files', 'Files') }}
+                        {{ m.nav_link('upload', 'Upload') }}
+                    {% endif %}
+
+
+                    <div class="right menu">
+
+
+                        <div class="ui dropdown item" tabindex="0">
+
+                            {% if current_user.is_authenticated %}
+                            Account
+                            <i class="dropdown icon"></i>
+
+                            <div class="menu" tabindex="-1">
+                                {{ m.nav_link('signout', 'Sign Out') }}
+                                {{ m.nav_link('files', 'Files') }}
+                                {{ m.nav_link('upload', 'Upload') }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        {#        <div class="mobile only row">#}
+        {#            <div class="column">#}
+        {##}
+        {#                <div id="main_navigation_collapsed" class="ui inverted blue borderless attached fluid menu">#}
+        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/" class="brand item"><strong>v.#}
+        {#                        4.2.52</strong></a>#}
+        {#                    <div class="right menu">#}
+        {##}
+        {##}
+        {#                        <div class="ui dropdown item" tabindex="0">#}
+        {##}
+        {#                            <img src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/GB.png"#}
+        {#                                 class="ui middle aligned image" style="max-width: inherit !important;"#}
+        {#                                 alt="lib/flags-iso/flat/24/GB"> <i class="dropdown icon"></i>#}
+        {##}
+        {#                            <div class="menu transition hidden" tabindex="-1">#}
+        {##}
+        {#                                <a class="item active " href="http://iridadesign.com/starter-public-edition-4/www/"><img#}
+        {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/GB.png"#}
+        {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
+        {#                                        alt="lib/flags-iso/flat/24/GB"> English</a>#}
+        {#                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/bg/"><img#}
+        {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/BG.png"#}
+        {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
+        {#                                        alt="lib/flags-iso/flat/24/BG"> Български</a>#}
+        {#                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/fr/"><img#}
+        {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/FR.png"#}
+        {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
+        {#                                        alt="lib/flags-iso/flat/24/FR"> Français</a>#}
+        {#                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/pl/"><img#}
+        {#                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/PL.png"#}
+        {#                                        class="ui middle aligned image" style="max-width: inherit !important;"#}
+        {#                                        alt="lib/flags-iso/flat/24/PL"> Polski</a>#}
+        {##}
+        {#                            </div>#}
+        {##}
+        {#                        </div>#}
+        {##}
+        {#                    </div>#}
+        {#                    <div class="right menu open" style="margin-left: 0 !important;">#}
+        {#                        <a href="" class="menu item toggle">#}
+        {#                            <i class="content icon"></i>#}
+        {#                        </a>#}
+        {#                    </div>#}
+        {#                </div>#}
+        {##}
+        {#                <div class="ui vertical inverted blue borderless attached stacked fluid menu transition hidden"#}
+        {#                     style="display: none;">#}
+        {##}
+        {##}
+        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/" class="item active"><i#}
+        {#                            class="home icon"></i> Home</a>#}
+        {##}
+        {##}
+        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/readme" class="item"><i#}
+        {#                            class="info circle icon"></i> README</a>#}
+        {##}
+        {##}
+        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/contact-page-test" class="item"><i#}
+        {#                            class="mail icon"></i> Contact Page Test</a>#}
+        {##}
+        {##}
+        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground" class="item"><i#}
+        {#                            class="sun icon"></i> The Playground</a>#}
+        {##}
+        {##}
+        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/non-mvc/demo.php" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Non-MVC#}
+        {#                        Page Demonstration</a>#}
+        {##}
+        {##}
+        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/non-mvc/http_build_url_test.php"#}
+        {#                       class="item">&nbsp;&nbsp;&nbsp;&nbsp;Testing http_build_url()</a>#}
+        {##}
+        {##}
+        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground/captcha" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Captcha#}
+        {#                        Test</a>#}
+        {##}
+        {##}
+        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground/mustache" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Mustache#}
+        {#                        Parser Test</a>#}
+        {##}
+        {##}
+        {#                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground" class="item">&nbsp;&nbsp;&nbsp;&nbsp;And#}
+        {#                        so on, see the Playground index page</a>#}
+        {##}
+        {##}
+        {#                    <div class="item header">Theme: Front Default</div>#}
+        {##}
+        {#                    <a class="item active "#}
+        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_default">&nbsp;&nbsp;&nbsp;&nbsp;Front#}
+        {#                        Default</a>#}
+        {#                    <a class="item"#}
+        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_default">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
+        {#                        UI Default</a>#}
+        {#                    <a class="item"#}
+        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_amazon">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
+        {#                        UI Amazon</a>#}
+        {#                    <a class="item"#}
+        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_basic">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
+        {#                        UI Basic</a>#}
+        {#                    <a class="item"#}
+        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_chubby">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
+        {#                        UI Chubby</a>#}
+        {#                    <a class="item"#}
+        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_classic">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
+        {#                        UI Classic</a>#}
+        {#                    <a class="item"#}
+        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_flat">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
+        {#                        UI Flat</a>#}
+        {#                    <a class="item"#}
+        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_github">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
+        {#                        UI GitHub</a>#}
+        {#                    <a class="item"#}
+        {#                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_material">&nbsp;&nbsp;&nbsp;&nbsp;Semantic#}
+        {#                        UI Material</a>#}
+        {##}
+        {##}
+        {#                </div>#}
+        {##}
+        {#            </div>#}
+        {#        </div>#}
+
+    </div>
+
+</nav>
+
+<html class="js flexbox canvas canvastext webgl touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths no-bgrepeatround no-bgrepeatspace cookies bgsizecover boxsizing display-table cubicbezierrange no-overflowscrolling pointerevents no-userselect customprotocolhandler no-createelement-attrs progressbar meter details no-emoji devicemotion deviceorientation filereader placeholder no-framed sharedworkers webp datauri wf-lato-n4-active wf-icons-n4-active wf-fontawesome-n4-active wf-materialicons-n4-active wf-active"
+      lang="en" dir="ltr">
+<head>
+
+    <meta charset="utf-8">
+
+
+    <base href="http://iridadesign.com/starter-public-edition-4/www/">
+
+
+    <title>Application Starter 4 Public Edition</title>
+
+    <link rel="canonical" href="http://iridadesign.com/starter-public-edition-4/www/">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" type="image/x-icon" href="/starter-public-edition-4/www/favicon.ico">
+
+    <link rel="apple-touch-icon-precomposed" href="/starter-public-edition-4/www/apple-touch-icon-precomposed.png">
+
+
+    <script type="text/javascript">
+        //<![CDATA[
+        var BASE_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/";
+        var BASE_URI = "\/starter-public-edition-4\/www\/";
+        var SERVER_URL = "http:\/\/iridadesign.com\/";
+        var SITE_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/";
+        var CURRENT_SITE_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/";
+        var SITE_URI = "\/starter-public-edition-4\/www\/";
+        var CURRENT_SITE_URI = "\/starter-public-edition-4\/www\/";
+        var CURRENT_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/";
+        var CURRENT_URI = "\/starter-public-edition-4\/www\/";
+        var CURRENT_URL_IS_HTTPS = false;
+        var CURRENT_URL_PROTOCOL = "http";
+        var CURRENT_URL_HOST = "iridadesign.com";
+        var CURRENT_URL_PORT = 80;
+        var CURRENT_URI_STRING = "\/starter-public-edition-4\/www\/";
+        var CURRENT_QUERY_STRING = null;
+        var DEFAULT_BASE_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/";
+        var DEFAULT_BASE_URI = "\/starter-public-edition-4\/www\/";
+        var ASSET_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/assets\/";
+        var ASSET_URI = "\/starter-public-edition-4\/www\/assets\/";
+        var THEME_ASSET_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/themes\/";
+        var THEME_ASSET_URI = "\/starter-public-edition-4\/www\/themes\/";
+        var ASSET_IMG_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/assets\/img\/";
+        var ASSET_IMG_URI = "\/starter-public-edition-4\/www\/assets\/img\/";
+        var ASSET_JS_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/assets\/js\/";
+        var ASSET_JS_URI = "\/starter-public-edition-4\/www\/assets\/js\/";
+        var ASSET_CSS_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/assets\/css\/";
+        var ASSET_CSS_URI = "\/starter-public-edition-4\/www\/assets\/css\/";
+        var THEME_IMG_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/themes\/img\/";
+        var THEME_IMG_URI = "\/starter-public-edition-4\/www\/themes\/img\/";
+        var THEME_JS_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/themes\/js\/";
+        var THEME_JS_URI = "\/starter-public-edition-4\/www\/themes\/js\/";
+        var THEME_CSS_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/themes\/css\/";
+        var THEME_CSS_URI = "\/starter-public-edition-4\/www\/themes\/css\/";
+        var PUBLIC_UPLOAD_URL = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/upload\/";
+        var UA_IS_MOBILE = false;
+        var UA_IS_ROBOT = false;
+        var UA_IS_REFERRAL = false;
+
+        var site_url = "http:\/\/iridadesign.com\/starter-public-edition-4\/www\/"; // The language segment is added. Kept here for BC, replaced by CURRENT_SITE_URL.
+        var site_uri = "\/starter-public-edition-4\/www\/"; // The language segment is added. Kept here for BC, replaced by CURRENT_SITE_URI.
+        //]]>
+    </script>
+
+    <script type="text/javascript"
+            src="http://iridadesign.com/starter-public-edition-4/www/assets/js/lib/webfontloader/webfontloader.js"></script>
+
+    <link rel="stylesheet" href="/starter-public-edition-4/www/assets/css/lib/lato/latofonts.min.css" media="all">
+    <link rel="stylesheet" href="/starter-public-edition-4/www/assets/css/lib/semantic-icons-default/icons.css"
+          media="all">
+    <link rel="stylesheet" href="/starter-public-edition-4/www/assets/css/lib/font-awesome-4/font-awesome.min.css"
+          media="all">
+    <link rel="stylesheet" href="/starter-public-edition-4/www/assets/css/lib/material-icons/material-icons.min.css"
+          media="all">
+    <script type="text/javascript">
+        //<![CDATA[
+
+        WebFont.load({
+            custom: {
+                families: [
+                    'Lato',
+                    'Icons',
+                    'FontAwesome',
+                    'Material Icons'
+                ],
+                urls: [
+                    ASSET_CSS_URI + 'lib/lato/latofonts.min.css',
+                    ASSET_CSS_URI + 'lib/semantic-icons-default/icons.css',
+                    ASSET_CSS_URI + 'lib/font-awesome-4/font-awesome.min.css',
+                    ASSET_CSS_URI + 'lib/material-icons/material-icons.min.css'
+                ]
+            },
+            timeout: 2000
+        });
+
+        //]]>
+    </script>
+
+
+    <link href="/starter-public-edition-4/www/assets/css/lib/sweetalert/sweetalert.min.css" type="text/css"
+          rel="stylesheet">
+
+    <link href="/starter-public-edition-4/www/assets/css/lib/jquery-ui-custom/jquery-ui.min.css" type="text/css"
+          rel="stylesheet">
+
+    <link href="/starter-public-edition-4/www/themes/front_semantic_ui_default/css/front.min.css" type="text/css"
+          rel="stylesheet">
+
+
+    <script type="text/javascript" src="/starter-public-edition-4/www/assets/js/lib/phpjs/phpjs.min.js"></script>
+    <style type="text/css">
+        :root #header + #content > #left > #rlblock_left {
+            display: none !important;
+        }</style>
+
+    <script type="text/javascript"
+            src="/starter-public-edition-4/www/assets/js/lib/modernizr/modernizr.custom.min.js"></script>
+
+    <script type="text/javascript"
+            src="/starter-public-edition-4/www/assets/js/lib/jquery/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript"
+            src="/starter-public-edition-4/www/assets/js/lib/jquery/jquery-migrate-1.4.1.min.js"></script>
+
+    <script type="text/javascript"
+            src="/starter-public-edition-4/www/assets/js/lib/jquery-json/jquery.json.js"></script>
+
+
+    <script type="text/javascript"
+            src="/starter-public-edition-4/www/assets/js/lib/sweetalert/sweetalert.min.js"></script>
+
+
+</head>
+
+
+<body class="welcome_module welcome_controller index_method" id="page-top">
+
+
+<nav id="main_navigation">
+
+    <div class="ui grid">
+
+        <div class="mobile hidden row">
+            <div class="column">
+
+                <div id="main_navigation_expanded" class="ui inverted blue borderless attached menu page grid">
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/" class="brand item"><strong>v.
+                        4.2.52</strong></a>
+
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/" class="item active"><i
+                            class="home icon"></i> Home</a>
+
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/readme" class="item"><i
+                            class="info circle icon"></i> README</a>
+
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/contact-page-test" class="item"><i
+                            class="mail icon"></i> Contact Page Test</a>
+
+
+                    <div class="ui dropdown item" tabindex="0">
+
+                        <i class="sun icon"></i> The Playground
+                        <i class="dropdown icon"></i>
+
+                        <div class="menu transition hidden" tabindex="-1">
+                            <a href="http://iridadesign.com/starter-public-edition-4/www/playground" class="item"><i
+                                    class="sun icon"></i> The Playground</a>
+                            <div class="ui divider"></div>
+
+
+                            <a href="http://iridadesign.com/starter-public-edition-4/www/non-mvc/demo.php" class="item">Non-MVC
+                                Page Demonstration</a>
+
+
+                            <a href="http://iridadesign.com/starter-public-edition-4/www/non-mvc/http_build_url_test.php"
+                               class="item">Testing http_build_url()</a>
+
+
+                            <div class="ui divider"></div>
+
+
+                            <a href="http://iridadesign.com/starter-public-edition-4/www/playground/captcha"
+                               class="item">Captcha Test</a>
+
+
+                            <a href="http://iridadesign.com/starter-public-edition-4/www/playground/mustache"
+                               class="item">Mustache Parser Test</a>
+
+
+                            <div class="ui divider"></div>
+
+
+                            <a href="http://iridadesign.com/starter-public-edition-4/www/playground" class="item">And so
+                                on, see the Playground index page</a>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="right menu">
+
+
+                        <div class="ui dropdown item active visible" tabindex="0">
+
+                            Theme: Semantic UI Default
+                            <i class="dropdown icon"></i>
+
+                            <div class="menu transition visible" tabindex="-1" style="display: block !important;">
+
+                                <a class="item"
+                                   href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_default">Front
+                                    Default</a>
+                                <a class="item active "
+                                   href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_default">Semantic
+                                    UI Default</a>
+                                <a class="item"
+                                   href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_amazon">Semantic
+                                    UI Amazon</a>
+                                <a class="item"
+                                   href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_basic">Semantic
+                                    UI Basic</a>
+                                <a class="item"
+                                   href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_chubby">Semantic
+                                    UI Chubby</a>
+                                <a class="item"
+                                   href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_classic">Semantic
+                                    UI Classic</a>
+                                <a class="item"
+                                   href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_flat">Semantic
+                                    UI Flat</a>
+                                <a class="item"
+                                   href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_github">Semantic
+                                    UI GitHub</a>
+                                <a class="item"
+                                   href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_material">Semantic
+                                    UI Material</a>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="ui dropdown item" tabindex="0">
+
+                            <img src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/GB.png"
+                                 class="ui middle aligned image" style="max-width: inherit !important;"
+                                 alt="lib/flags-iso/flat/24/GB"> <i class="dropdown icon"></i>
+
+                            <div class="menu" tabindex="-1">
+
+                                <a class="item active " href="http://iridadesign.com/starter-public-edition-4/www/"><img
+                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/GB.png"
+                                        class="ui middle aligned image" style="max-width: inherit !important;"
+                                        alt="lib/flags-iso/flat/24/GB"> English</a>
+                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/bg/"><img
+                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/BG.png"
+                                        class="ui middle aligned image" style="max-width: inherit !important;"
+                                        alt="lib/flags-iso/flat/24/BG"> Български</a>
+                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/fr/"><img
+                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/FR.png"
+                                        class="ui middle aligned image" style="max-width: inherit !important;"
+                                        alt="lib/flags-iso/flat/24/FR"> Français</a>
+                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/pl/"><img
+                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/PL.png"
+                                        class="ui middle aligned image" style="max-width: inherit !important;"
+                                        alt="lib/flags-iso/flat/24/PL"> Polski</a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="mobile only row">
+            <div class="column">
+
+                <div id="main_navigation_collapsed" class="ui inverted blue borderless attached fluid menu">
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/" class="brand item"><strong>v.
+                        4.2.52</strong></a>
+                    <div class="right menu">
+
+
+                        <div class="ui dropdown item" tabindex="0">
+
+                            <img src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/GB.png"
+                                 class="ui middle aligned image" style="max-width: inherit !important;"
+                                 alt="lib/flags-iso/flat/24/GB"> <i class="dropdown icon"></i>
+
+                            <div class="menu" tabindex="-1">
+
+                                <a class="item active " href="http://iridadesign.com/starter-public-edition-4/www/"><img
+                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/GB.png"
+                                        class="ui middle aligned image" style="max-width: inherit !important;"
+                                        alt="lib/flags-iso/flat/24/GB"> English</a>
+                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/bg/"><img
+                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/BG.png"
+                                        class="ui middle aligned image" style="max-width: inherit !important;"
+                                        alt="lib/flags-iso/flat/24/BG"> Български</a>
+                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/fr/"><img
+                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/FR.png"
+                                        class="ui middle aligned image" style="max-width: inherit !important;"
+                                        alt="lib/flags-iso/flat/24/FR"> Français</a>
+                                <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/pl/"><img
+                                        src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/PL.png"
+                                        class="ui middle aligned image" style="max-width: inherit !important;"
+                                        alt="lib/flags-iso/flat/24/PL"> Polski</a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="right menu open" style="margin-left: 0 !important;">
+                        <a href="" class="menu item toggle">
+                            <i class="content icon"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="ui vertical inverted blue borderless attached stacked fluid menu" style="display: none;">
+
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/" class="item active"><i
+                            class="home icon"></i> Home</a>
+
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/readme" class="item"><i
+                            class="info circle icon"></i> README</a>
+
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/contact-page-test" class="item"><i
+                            class="mail icon"></i> Contact Page Test</a>
+
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground" class="item"><i
+                            class="sun icon"></i> The Playground</a>
+
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/non-mvc/demo.php" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Non-MVC
+                        Page Demonstration</a>
+
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/non-mvc/http_build_url_test.php"
+                       class="item">&nbsp;&nbsp;&nbsp;&nbsp;Testing http_build_url()</a>
+
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground/captcha" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Captcha
+                        Test</a>
+
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground/mustache" class="item">&nbsp;&nbsp;&nbsp;&nbsp;Mustache
+                        Parser Test</a>
+
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/playground" class="item">&nbsp;&nbsp;&nbsp;&nbsp;And
+                        so on, see the Playground index page</a>
+
+
+                    <div class="item header">Theme: Semantic UI Default</div>
+
+                    <a class="item" href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_default">&nbsp;&nbsp;&nbsp;&nbsp;Front
+                        Default</a>
+                    <a class="item active "
+                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_default">&nbsp;&nbsp;&nbsp;&nbsp;Semantic
+                        UI Default</a>
+                    <a class="item"
+                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_amazon">&nbsp;&nbsp;&nbsp;&nbsp;Semantic
+                        UI Amazon</a>
+                    <a class="item"
+                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_basic">&nbsp;&nbsp;&nbsp;&nbsp;Semantic
+                        UI Basic</a>
+                    <a class="item"
+                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_chubby">&nbsp;&nbsp;&nbsp;&nbsp;Semantic
+                        UI Chubby</a>
+                    <a class="item"
+                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_classic">&nbsp;&nbsp;&nbsp;&nbsp;Semantic
+                        UI Classic</a>
+                    <a class="item"
+                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_flat">&nbsp;&nbsp;&nbsp;&nbsp;Semantic
+                        UI Flat</a>
+                    <a class="item"
+                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_github">&nbsp;&nbsp;&nbsp;&nbsp;Semantic
+                        UI GitHub</a>
+                    <a class="item"
+                       href="http://iridadesign.com/starter-public-edition-4/www/?theme=front_semantic_ui_material">&nbsp;&nbsp;&nbsp;&nbsp;Semantic
+                        UI Material</a>
+
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</nav>
+
+
+<header id="header">
+
+    <div class="ui vertically padded grid page">
+
+
+        <div class="row">
+            <div class="column">
+
+                <h1 class="ui header">Application Starter 4 Public Edition</h1>
+
+            </div>
+        </div>
+
+
+    </div>
+
+</header>
+
+<main id="main_content">
+
+    <div class="ui vertically padded grid page">
+
+
+        <div id="main_feedback_message" style="width: 100%;">
+
+
+        </div>
+
+
+        <script type="text/javascript">
+            //<![CDATA[
+
+            function show_main_feedback_message(message, message_type) {
+
+                if (typeof message != 'undefined' && message != '') {
+
+                    if (typeof message_type == 'undefined' || message_type == '') {
+                        message_type = 'normal_message';
+                    }
+
+
+                    var visual_class = 'ui info message';
+
+
+                    switch (message_type) {
+
+                        case 'confirmation-message':
+                        case 'confirmation_message':
+
+                            visual_class = 'ui positive message';
+
+                            break;
+
+                        case 'warning-message':
+                        case 'warning_message':
+
+                            visual_class = 'ui orange message';
+
+                            break;
+
+                        case 'error-message':
+                        case 'error_message':
+
+                            visual_class = 'ui negative message';
+
+                            break;
+                    }
+
+
+                    $('#main_feedback_message').html('<div class="' + visual_class + '"> <i class="close icon"></i> ' + message + ' </div>');
+
+                }
+            }
+
+            function clear_main_feedback_message() {
+                $('#main_feedback_message').html('');
+            }
+
+            //]]>
+        </script>
+
+
+        <div class="row">
+            <div id="content-container" class="sixteen wide column">
+
+
+                <p>
+                    Project repository: <a href="https://github.com/ivantcholakov/starter-public-edition-4/"
+                                           target="_blank">https://github.com/ivantcholakov/starter-public-edition-4/</a>
+                </p>
+
+                <div class="ui info message">
+                    <i class="info circle icon"></i> Here you can start developing the administration part of your site:
+                    <strong><a href="http://iridadesign.com/starter-public-edition-4/www/admin">http://iridadesign.com/starter-public-edition-4/www/admin</a></strong>
+                </div>
+
+                <p>A Semantic UI icon: <i class="star icon"></i></p>
+                <p>A Material Design icon: <i class="mdi mdi-star"></i></p>
+                <p>A Font Awesome icon: <i class="fa fa-star"></i></p>
+
+                <h2>Internationalization Test</h2>
+
+                <p>
+                    Switch language by using the menu, see top, right. The text below should be properly translated.
+                </p>
+
+                <p>A translated text: <strong>Hello!</strong></p>
+
+                <p>
+                    Another language switcher test:
+                </p>
+
+                <p>
+
+
+                    <strong><a href="http://iridadesign.com/starter-public-edition-4/www/"><img
+                            src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/GB.png"
+                            class="ui bottom aligned image" alt="lib/flags-iso/flat/24/GB"> English</a></strong>
+
+
+                    |
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/bg/"><img
+                            src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/BG.png"
+                            class="ui bottom aligned image" alt="lib/flags-iso/flat/24/BG"> Български</a>
+
+
+                    |
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/fr/"><img
+                            src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/FR.png"
+                            class="ui bottom aligned image" alt="lib/flags-iso/flat/24/FR"> Français</a>
+
+
+                    |
+
+                    <a href="http://iridadesign.com/starter-public-edition-4/www/pl/"><img
+                            src="/starter-public-edition-4/www/assets/img/lib/flags-iso/flat/24/PL.png"
+                            class="ui bottom aligned image" alt="lib/flags-iso/flat/24/PL"> Polski</a>
+
+
+                </p>
+
+                <h2>Self-Diagnostics</h2>
+
+                <p><strong>Writable folders check:</strong><br>platform/writable/ - <span
+                        class="green text">writable</span><br>platform/upload/ - <span
+                        class="green text">writable</span><br>www/upload/ - <span class="green text">writable</span><br>www/cache/
+                    - <span class="green text">writable</span><br>www/editor/ - <span class="green text">writable</span><br><br><strong>Mailer:</strong><br>Mailer
+                    service - <span class="green text">enabled</span><br><br><strong>UTF-8 support:</strong><br>IS_UTF8_CHARSET
+                    - <span class="green text">Yes</span><br>MBSTRING_INSTALLED - <span
+                            class="green text">Yes</span><br>ICONV_INSTALLED - <span class="green text">Yes</span><br>PCRE_UTF8_INSTALLED
+                    - <span class="green text">Yes</span><br>INTL_INSTALLED (optional) - <span
+                            class="green text">Yes</span><br><br><strong>Cryptography support:</strong><br>'openssl'
+                    installed - <span class="green text">Yes</span><br>or 'mcrypt' installed - <span class="green text">Yes</span><br>random_bytes()
+                    - <span class="green text">Yes</span><br><br><strong>Graphics:</strong><br>'gd' installed - <span
+                            class="green text">Yes</span>, bundled (2.1.0
+                    compatible)<br><br><strong>Communication:</strong><br>'curl' (optional) - <span class="green text">Yes</span>
+                </p>
+
+
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+
+<footer id="footer">
+
+    <div class="ui vertically padded grid page black inverted footer attached segment">
+
+        <div class="row">
+            <div class="column">
+
+                <p>Copyright © 2012 - 2017 Ivan Tcholakov and other contributors. License: <a
+                        href="http://opensource.org/licenses/MIT" target="_blank">MIT</a>. This page has been generated
+                    in <strong>0.1003 seconds</strong> using <strong>7.45MB</strong> of memory.</p>
+                <a class="circular ui icon huge blue scroll top button" href="/starter-public-edition-4/www/#page-top"
+                   title="Go to top" style="display: none;"><i class="chevron up icon"></i></a>
+
+            </div>
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script type="text/javascript" src="/starter-public-edition-4/www/assets/js/lib/bp/plugins.js"></script>
+
+<script type="text/javascript" src="/starter-public-edition-4/www/assets/js/lib/mbp/helper.js"></script>
+
+
+<script type="text/javascript" src="/starter-public-edition-4/www/assets/js/lib/semantic/semantic.min.js"></script>
+
+
+<script type="text/javascript"
+        src="/starter-public-edition-4/www/assets/js/lib/google-code-prettify/prettify.js"></script>
+
+<script type="text/javascript"
+        src="/starter-public-edition-4/www/assets/js/lib/jquery-ui-custom/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="/starter-public-edition-4/www/assets/js/front.js"></script>
+
+<div id="debug"></div>
+
+
+</body>
+</html>

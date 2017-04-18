@@ -40,6 +40,7 @@ def upload():
             handler = request.files[f]
             uid = uuid.uuid4().hex
             original_filename = splitext_(handler.filename)[0]
+            print(original_filename, file=sys.stderr)
             try:
                 filename = uid + splitext_(handler.filename)[1]
                 handler.save(os.path.join(app.config['UPLOAD_PATH'], filename))

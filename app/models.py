@@ -10,11 +10,11 @@ class User(db.Model, UserMixin):
     ''' A user who has an account on the website. '''
     __tablename__ = 'users'
 
-    first_name = db.Column(db.String)
-    last_name = db.Column(db.String)
-    email = db.Column(db.String, primary_key=True, unique=True)
+    first_name = db.Column(db.String(255))
+    last_name = db.Column(db.String(255))
+    email = db.Column(db.String(255), primary_key=True, unique=True)
     confirmation = db.Column(db.Boolean)
-    _password = db.Column(db.String)
+    _password = db.Column(db.String(255))
     files = relationship("Association", back_populates="user")
 
     def __init__(self, first_name, last_name, email, password, confirmation):
@@ -54,13 +54,14 @@ class File(db.Model):
     ''' A file which exists '''
     __tablename__ = 'files'
 
-    id = db.Column(db.String, primary_key=True, unique=True)
-    file_name = db.Column(db.String, unique=True)
-    file_type = db.Column(db.String)
-    file_path = db.Column(db.String)
-    description = db.Column(db.String)
-    thumbnail_path = db.Column(db.String)
+    id = db.Column(db.String(255), primary_key=True, unique=True)
+    file_name = db.Column(db.String(255), unique=True)
+    file_type = db.Column(db.String(255))
+    file_path = db.Column(db.String(255))
+    description = db.Column(db.String(255))
+    thumbnail_path = db.Column(db.String(255))
     users = relationship("Association", back_populates="file")
+    original_name = db.Column(db.String(255))
 
     def __init__(self, file_path, description, original_name):
         self.id = os.path.splitext(os.path.basename(file_path))[0]
@@ -85,8 +86,8 @@ class Association(db.Model):
     ''' Many to Many association for permission handling between a user and a file '''
     __tablename__ = 'association'
 
-    user_id = db.Column(db.String, ForeignKey('users.email'), primary_key=True)
-    file_id = db.Column(db.String, ForeignKey('files.id'), primary_key=True)
+    user_id = db.Column(db.String(255), ForeignKey('users.email'), primary_key=True)
+    file_id = db.Column(db.String(255), ForeignKey('files.id'), primary_key=True)
     permission = db.Column(db.Integer)
     file = relationship("File", back_populates="users")
     user = relationship("User", back_populates="files")

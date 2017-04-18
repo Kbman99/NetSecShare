@@ -169,7 +169,7 @@ def signin():
                 return redirect(url_for('index'))
             else:
                 print(c)
-                logger.info('User login failed', user=user.email)
+                logger.info('User login failed', user=current_user.get_id())
                 flash('The password you have entered is wrong.', 'negative')
                 return redirect(url_for('userbp.signin'))
         else:
@@ -236,7 +236,7 @@ def forgot():
             html = render_template('email/reset.html', reset_url=resetUrl)
             # Send the email to user
             email.send(user.email, subject, html)
-            logger.info('User password reset email sent', user=user.email)
+            logger.info('User password reset email sent', user=user.get_id())
             # Send back to the home page
             flash('Check your emails to reset your password.', 'positive')
             return redirect(url_for('index'))
@@ -279,7 +279,7 @@ def reset(token):
             c.unbind()
             # Update the database with the user
             db.session.commit()
-            logger.info('User password reset successfully', user=user.email)
+            logger.info('User password reset successfully', user=user.get_id())
             # Send to the signin page
             flash('Your password has been reset, you can sign in.', 'positive')
             return redirect(url_for('userbp.signin'))
@@ -315,21 +315,21 @@ def share():
     user_email = data["email"]
     file_id = data["file"]
     target_user = models.User.query.filter_by(email=user_email).first()
+    response = None
     if target_user:
         try:
-            target_file = models.File.filter_by(id=file_id).first()
+            target_file = models.File.query.filter_by(id=file_id).first()
             target_file.share_file(target_user)
             db.session.commit()
             flash("You successfully shared your file with {}".format(user_email), "positive")
-            logger.info("File shared by {} to {}".format(current_user, target_user), user=current_user)
+            logger.info("File shared by {} to {}".format(current_user.get_id(), target_user.get_id()), user=current_user.get_id())
             return jsonify(dict(success=True, message='File shared!'))
         except Exception as e:
             flash("Error encountered while sharing file, contact an admin or try again", "negative")
-            logger.error("Exception encountered {}".format(e), user=current_user)
+            logger.error("Exception encountered {}".format(e), user=current_user.get_id())
+            response = {"message": "error"}
             pass
-    if e:
-        response = {"status": 200, "error": e}
-    else:
+    if response is None:
         response = {"status": 200}
     return jsonify(result=response)
 
@@ -344,7 +344,7 @@ def delete_file():
         if item.file is target_file:
             db.session.delete(item)
             db.session.commit()
-            logger.info("User {} no longer can access file {}".format(current_user, file_id))
+            logger.info("User {} no longer can access file {}".format(current_user.get_id(), file_id), user=current_user.get_id())
             return jsonify(dict(success=True, message="File deleted"))
     return jsonify(dict(success=False, message="Unable to delete file"))
 
